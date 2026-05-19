@@ -1,0 +1,29 @@
+<ul class="footer-payment">
+    {%- if settings.enable_klarna -%}
+    <li>{{- 'klarna' | payment_type_svg_tag: class: 'icon' -}}</li>
+    {%- endif -%}
+    {%- if settings.enable_ideal -%}
+    <li>{{- 'ideal' | payment_type_svg_tag: class: 'icon' -}}</li>
+    {%- endif -%}
+    {%- if settings.enable_bancontact -%}
+    <li>{{- 'bancontact' | payment_type_svg_tag: class: 'icon' -}}</li>
+    {%- endif -%}
+    {%- if settings.enable_mastercard -%}
+    <li>{{- 'master' | payment_type_svg_tag: class: 'icon' -}}</li>
+    {%- endif -%}
+    {%- if settings.enable_visa -%}
+    <li>{{- 'visa' | payment_type_svg_tag: class: 'icon' -}}</li>
+    {%- endif -%}
+    {%- if settings.enable_american_express -%}
+    <li>{{- 'american_express' | payment_type_svg_tag: class: 'icon' -}}</li>
+    {%- endif -%}
+    {%- if settings.enable_afterpay -%}
+    <li>{{- 'afterpay' | payment_type_svg_tag: class: 'icon' -}}</li>
+    {%- endif -%}
+    {%- if settings.enable_discover -%}
+    <li>{{- 'discover' | payment_type_svg_tag: class: 'icon' -}}</li>
+    {%- endif -%}
+    {%- if settings.enable_maestro -%}
+    <li>{{- 'maestro' | payment_type_svg_tag: class: 'icon' -}}</li>
+    {%- endif -%}
+</ul>

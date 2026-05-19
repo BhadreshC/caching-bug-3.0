@@ -1,0 +1,23 @@
+{% assign current_variant = product.selected_or_first_available_variant %}
+
+<div class="snippet-variant-picker product-form__group variant-swatches">
+    <label>{{ 'products.variant' | t }}:</label>
+
+    <div class="swatch-list">
+        {% for variant in product.variants %}
+        <label class="swatch-item {% if variant.id == current_variant.id %}active{% endif %}">
+        <input
+            type="radio"
+            name="id"
+            value="{{ variant.id }}"
+            aria-label="{{ variant.title }}"
+            data-available="{{ variant.available }}"
+            {% if variant.id == current_variant.id %}checked{% endif %}
+        >
+        <span class="swatch-label">
+            {{ variant.title }}
+        </span>
+        </label>
+        {% endfor %}
+    </div>
+</div>

@@ -1,0 +1,1 @@
+/Users/nsl/Not-Selling-Liquid/New skeleton/nsl-skeleton-2.0/AGENTS.md

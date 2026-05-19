@@ -1,0 +1,15 @@
+.cart_discounts {column-gap: 7px;display: flex;flex-wrap: wrap;justify-content: flex-end;margin-bottom: 15px;row-gap: 7px;list-style-type: none;}
+.cart_discounts li {background-color: #ededed;border-radius: 5px;padding: 7px 9px;display: flex;align-items: center;}
+.cart_discounts span {text-transform: uppercase;}
+.cart_discounts .remove-discount {align-items: center;cursor: pointer;display: flex;height: 10px;justify-content: center;margin-left: 9px;opacity: 0.5;width: 10px;}
+.cart_discounts .remove-discount:hover {opacity: 1;transition: 0.3;}
+.custom-discount-form {margin-bottom: 7px;}
+.custom-discount-form input {flex: 1;border-radius: 0px;padding: 0px 0px 0px 8px;height: 45px;text-align: left;color: rgb(119, 119, 119);font-size: 12px;font-weight: 400;letter-spacing: 1px;background-color: rgba(241, 230, 211, 0);border: none;border-bottom: 1px solid rgb(119, 119, 119);margin: 0;}
+.submit-discount{background:black;color:white;padding: 0 15px}
+.custom-discount-form input:focus-visible {outline: auto !important;outline-width: 2px;outline-style: auto;outline-color: rgba(119, 119, 119, 1);outline-offset: 0;}
+.custom-discount-form .form {display: flex;}
+.custom-discount-form .error {color: red;display: none;}
+.cart_discounts-block{max-width: 100% !important;width:100% !important;}
+.cart__widget__content__inner:has(.cart_discounts){padding: 0;}
+.cart__widget .swiper-button-next:after,.cart__widget .swiper-button-prev:after{display:none;}
+.cart__widget .swiper-button-next svg,.cart__widget .swiper-button-prev svg{width: 25px;height: 25px;z-index: 1;background: #f1e6d3; border-radius: 50%;}

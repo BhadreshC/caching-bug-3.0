@@ -1,0 +1,52 @@
+<link rel="stylesheet" href="{{ 'cart-discount.css' | asset_url }}">
+
+<div class="cart__widget__content">
+    <div class="cart__widget__content__inner">
+      <div class="cart_discounts-block">
+  {% assign discount_codes = "" %}
+  {% assign discount_list = "" %}
+  {% for discount_application in cart.cart_level_discount_applications %}
+    {% if discount_application.type == "discount_code" %}
+      {% assign discount_codes = discount_codes | append: ',' | append: discount_application.title %}
+    {% endif %}
+    {% assign discount_list = discount_list | append: ',' | append: discount_application.title %}
+  {% endfor %}
+  
+  {% for item in cart.items %}
+    {% if item.line_level_discount_allocations.size %}
+      {% for line_discount in item.line_level_discount_allocations %}        
+        {% if line_discount.discount_application.type == "discount_code" %}
+          {% assign discount_codes = discount_codes | append: ',' | append: line_discount.discount_application.title %}
+        {% endif %}
+        {% assign discount_list = discount_list | append: ',' | append: line_discount.discount_application.title %}
+      {% endfor %}
+    {% endif %}
+  {% endfor %}
+  
+  {% assign discount_codes = discount_codes | remove_first: ',' | split: ',' | uniq | join: ',' %}
+  {% assign discount_list = discount_list | remove_first: ',' | split: ',' | uniq | join: ',' %}
+
+  <div class="custom-discount-form">
+    <div class="form">      
+      <input name="custom-discount-input" type="text" placeholder="DISCOUNT CODE" />
+      <button type="button" class="submit-discount button">Apply</button>
+    </div>    
+    <p class="error">Enter a valid discount code or gift card</p>
+  </div>
+
+  <ul class="cart_discounts list-unstyled" >
+    {% assign codes = discount_list | split: ',' %}
+    {% for code in codes %}
+
+        <li class="discounts__discount discounts__discount--position">
+          <span>{{ code | escape }}</span>
+          <span class="remove-discount" data-code="{{ code }}">
+            {{ "icon-close.svg" | inline_asset_content }}
+          </span>
+        </li>
+
+    {% endfor %}
+  </ul>
+</div>
+    </div>
+  </div>

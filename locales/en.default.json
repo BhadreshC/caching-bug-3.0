@@ -1,0 +1,165 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin language editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "404": {
+    "title": "404",
+    "not_found": "Page not found.",
+    "back_to_shopping": "Back to shopping"
+  },
+  "blog": {
+    "article_comments": "Comments",
+    "article_metadata_html": "{{ date }} by {{ author }}",
+    "comment_form_body": "Comment",
+    "comment_form_email": "Email",
+    "comment_form_name": "Name",
+    "comment_form_submit": "Post",
+    "comment_form_title": "Add a comment"
+  },
+  "cart": {
+    "checkout": "Checkout",
+    "title": "Cart",
+    "update": "Update",
+    "remove": "Remove",
+    "subtotal": "Subtotal",
+    "total": "Total",
+    "empty": "Your cart is empty"
+  },
+  "customers": {
+    "login": {
+      "email": "Email",
+      "password": "Password",
+      "submit": "Sign in",
+      "title": "Login"
+    }
+  },
+  "collections": {
+    "title": "Collections"
+  },
+  "gift_card": {
+    "add_to_apple_wallet": "Add to Apple Wallet",
+    "card": "Gift card",
+    "expired": "Expired",
+    "active": "Active",
+    "expires_on": "Expires on {{ expires_on }}",
+    "use_at_checkout": "Use this gift card at checkout",
+    "copy_code": "Copy code",
+    "copied": "Code copied to clipboard",
+    "print": "Print",
+    "qr_code": "Gift card QR code"
+  },
+  "password": {
+    "title": "This shop is private",
+    "password": "Password",
+    "enter": "Enter"
+  },
+  "products": {
+    "add_to_cart": "Add to cart",
+    "variant": "Variant",
+    "quantity": "Quantity",
+    "price": "Price",
+    "product": "Product",
+    "sold_out": "Sold out",
+    "unavailable": "Unavailable",
+    "quick_button": "Quick add"
+  },
+  "search": {
+    "no_results": "No results found for “{{ terms }}”. Check the spelling or use a different word or phrase.",
+    "page": "Page",
+    "products": "Products",
+    "results_with_count": {
+      "one": "{{ count }} result",
+      "other": "{{ count }} results"
+    },
+    "results_with_count_and_term": {
+      "one": "{{ count }} result found for “{{ terms }}”",
+      "other": "{{ count }} results found for “{{ terms }}”"
+    },
+    "search_label": "Show",
+    "search": "Search",
+    "no_result": "No result found",
+    "search_for": "Search results for “{{ terms }}”",
+    "title": "Search",
+    "placeholder": "Search articles, pages, or products",
+    "submit": "Search",
+    "no_results_html": "No results found for {{ terms }}",
+    "results_for_html": "{{ count }} results found for {{ terms }}"
+  },
+  "sections":{
+    "cart_drawer": {
+      "item": "item",
+      "items": "items",
+      "close": "Close cart",
+      "free_shipping_achieved": "You've got free shipping!",
+      "free_shipping_remaining_html": "Add ${{ amount }} more for free shipping!",
+      "shipping_progress": "Free shipping progress",
+      "upsell_title": "You may also like",
+      "usps_title": "Why shop with us",
+      "original_price": "Original price",
+      "add_upsell": "Add {{ title }} to cart"
+    },
+    "cart": {
+      "title": "Cart",
+      "caption": "Cart items",
+      "remove_title": "Remove",
+      "subtotal": "Subtotal",
+      "new_subtotal": "New subtotal",
+      "note": "Order special instructions",
+      "checkout": "Check out",
+      "empty": "Your cart is empty",
+      "cart_error": "There was an error while updating your cart. Please try again.",
+      "cart_quantity_error_html": "You can only add {{ quantity }} of this item to your cart.",
+      "taxes_and_shipping_policy_at_checkout_html": "Taxes and <a href=\"{{ link }}\">shipping<\/a> calculated at checkout",
+      "taxes_included_but_shipping_at_checkout": "Tax included and shipping calculated at checkout",
+      "taxes_included_and_shipping_policy_html": "Tax included. <a href=\"{{ link }}\">Shipping<\/a> calculated at checkout.",
+      "taxes_and_shipping_at_checkout": "Taxes and shipping calculated at checkout",
+      "tax_message": "Taxes and shipping calculated at checkout",
+      "continue_shopping": "Continue Shopping",
+      "headings": {
+        "product": "Product",
+        "price": "Price",
+        "total": "Total",
+        "quantity": "Quantity",
+        "size": "Size"
+      },
+      "update": "Update",
+      "login": {
+        "title": "Have an account?",
+        "paragraph_html": "<a href=\"{{ link }}\" class=\"link underlined-link\">Log in<\/a> to check out faster."
+      }
+    },
+    "collection_template":{
+      "load_more":"Load more",
+      "empty":"No products found"
+    },
+    "collection": {
+      "toolbar_label": "Collection toolbar",
+      "filter": "Filter",
+      "sort_by": "Sort by",
+      "product_count": "{{ count }} products",
+      "close_filter": "Close filter",
+      "price_from": "From",
+      "price_to": "To",
+      "show_results": "Show {{ count }} results",
+      "clear_all": "Clear all",
+      "active_filters": "Active filters",
+      "remove_filter": "Remove filter: {{ label }}",
+      "products_label": "Products",
+      "pagination_label": "Pagination",
+      "loading": "Loading more products",
+      "load_more": "Load more",
+      "page_of": "Page {{ current }} of {{ total }}",
+      "previous_page": "Previous page",
+      "next_page": "Next page",
+      "go_to_page": "Go to page {{ page }}",
+      "current_page": "Page {{ page }}, current page",
+      "empty": "No products found"
+    }
+  }
+}

@@ -1,0 +1,304 @@
+<aside
+  class="cart-sidebar"
+  id="cart-drawer-{{ section.id }}"
+  data-cart-section-id="{{ section.id }}"
+  role="dialog"
+  aria-modal="true"
+  aria-label="{{ 'sections.cart.title' | t }}"
+  aria-hidden="true"
+  tabindex="-1"
+>
+  <div class="cart-drawer section-cart-drawer">
+    <div class="cart-drawer-wrapper">
+      <button
+        class="cart-drawer-close"
+        type="button"
+        aria-label="{{ 'sections.cart_drawer.close' | t }}"
+      >
+        {{ "icon-close.svg" | inline_asset_content }}
+      </button>
+
+      <form action="{{ routes.cart_url }}" method="post" id="cart-form-{{ section.id }}">
+        <div class="drawer-header {% if cart.item_count == 0 %}cart-empty{% endif %}">
+          <h2 class="h1" id="cart-drawer-title-{{ section.id }}">{{ 'sections.cart.title' | t }}</h2>
+          <p class="body-b-text" aria-live="polite" aria-atomic="true">
+            {% if cart.item_count > 0 -%}
+              {{ cart.item_count }}
+              {%- if cart.item_count == 1 %}
+                {{ 'sections.cart_drawer.item' | t }}
+              {% else %}
+                {{ 'sections.cart_drawer.items' | t }}
+              {% endif -%}
+            {%- endif %}
+          </p>
+        </div>
+
+        {%- if cart.item_count > 0 -%}
+          {% assign free_shipping_amount = section.settings.threshold | default: 100 | times: 1 %}
+          {% assign cart_total = cart.total_price | divided_by: 100 %}
+
+          <div class="free-shipping-bar" role="status" aria-live="polite">
+            {% if cart_total >= free_shipping_amount %}
+              <p>{{ 'sections.cart_drawer.free_shipping_achieved' | t }}</p>
+              <div class="progress-container" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" aria-label="{{ 'sections.cart_drawer.shipping_progress' | t }}">
+                <div
+                  class="progress-fill progress-fill--complete"
+                  style="width: 100%;"
+                ></div>
+              </div>
+            {% else %}
+              {% assign remaining = free_shipping_amount | minus: cart_total %}
+              <p>{{ 'sections.cart_drawer.free_shipping_remaining_html' | t: amount: remaining }}</p>
+              {% assign progress = cart_total | times: 100 | divided_by: free_shipping_amount %}
+              <div class="progress-container" role="progressbar" aria-valuenow="{{ progress }}" aria-valuemin="0" aria-valuemax="100" aria-label="{{ 'sections.cart_drawer.shipping_progress' | t }}">
+                <div
+                  class="progress-fill"
+                  style="width: {{ progress }}%;"
+                ></div>
+              </div>
+            {% endif %}
+          </div>
+        {% endif %}
+
+        {%- if cart.item_count > 0 -%}
+          <div class="drawer-middle" role="list" aria-label="{{ 'sections.cart.caption' | t }}">
+            {%- for item in cart.items -%}
+              {% render 'cart-line-item', item: item, index: forloop.index %}
+            {%- endfor -%}
+          </div>
+
+          {% render 'cart-discount' %}
+
+          {%- comment -%} Upsell blocks {%- endcomment -%}
+          {%- assign upsell_blocks = section.blocks | where: 'type', 'upsell' -%}
+          {% if upsell_blocks.size > 0 %}
+            <div
+              class="cart-drawer-upsell splide"
+              id="splide-{{ section.id }}"
+              role="region"
+              aria-label="{{ 'sections.cart_drawer.upsell_title' | t }}"
+            >
+              <div class="splide__track">
+                <ul class="splide__list">
+                  {% for block in upsell_blocks %}
+                    {% if block.settings.product != blank %}
+                      {% assign pro = block.settings.product %}
+                      {% assign variant = pro.selected_or_first_available_variant %}
+                      <li class="splide__slide" {{ block.shopify_attributes }}>
+                        <div class="upsell-card">
+                          <a href="{{ pro.url }}" class="upsell-image">
+                            {% if pro.featured_image %}
+                              <img
+                                src="{{ pro.featured_image | image_url: width: 400 }}"
+                                alt="{{ pro.featured_image.alt | default: pro.title | escape }}"
+                                loading="lazy"
+                                width="200"
+                                height="200"
+                              >
+                            {% endif %}
+                          </a>
+                          <h5 class="upsell-title">
+                            <a href="{{ pro.url }}">{{ pro.title }}</a>
+                          </h5>
+                          <div class="upsell-price">
+                            {% if variant.compare_at_price > variant.price %}
+                              <span class="price--sale">
+                                {{ variant.price | money }}
+                              </span>
+                              <s class="price--compare">
+                                <span class="visually-hidden">{{ 'sections.cart_drawer.original_price' | t }}</span>
+                                {{ variant.compare_at_price | money }}
+                              </s>
+                            {% else %}
+                              <span class="price">
+                                {{ variant.price | money }}
+                              </span>
+                            {% endif %}
+                          </div>
+                          <button
+                            type="button"
+                            class="button button--primary js-upsell-add-to-cart"
+                            data-variant-id="{{ variant.id }}"
+                            {% unless variant.available %}disabled aria-disabled="true"{% endunless %}
+                            aria-label="{{ 'sections.cart_drawer.add_upsell' | t: title: pro.title }}"
+                          >
+                            {% if variant.available %}
+                              {{ 'products.add_to_cart' | t }}
+                            {% else %}
+                              {{ 'products.sold_out' | t }}
+                            {% endif %}
+                          </button>
+                        </div>
+                      </li>
+                    {% endif %}
+                  {% endfor %}
+                </ul>
+              </div>
+            </div>
+          {% endif %}
+
+          {%- comment -%} USP blocks {%- endcomment -%}
+          {%- assign usp_blocks = section.blocks | where: 'type', 'usp' -%}
+          {% if usp_blocks.size > 0 %}
+            <ul class="cart-drawer-usps" role="list" aria-label="{{ 'sections.cart_drawer.usps_title' | t }}">
+              {% for block in usp_blocks %}
+                <li class="cart-drawer-usp" {{ block.shopify_attributes }}>
+                  {% if block.settings.icon != blank %}
+                    <span class="cart-drawer-usp__icon" aria-hidden="true">
+                      {{ block.settings.icon }}
+                    </span>
+                  {% endif %}
+                  {% if block.settings.text != blank %}
+                    <span class="cart-drawer-usp__text">{{ block.settings.text }}</span>
+                  {% endif %}
+                </li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+
+          <div class="drawer-footer">
+            <div class="cart--subtotal">
+              <span class="subtotal">{{ 'sections.cart.subtotal' | t }}:</span>
+              <span class="subtotal-total" aria-live="polite">{{ cart.total_price | money_with_currency }}</span>
+            </div>
+            <button
+              type="submit"
+              id="checkout-{{ section.id }}"
+              class="cart-checkout-button button button-full"
+              name="checkout"
+              {% if cart == empty %}
+                disabled
+              {% endif %}
+              form="cart-form-{{ section.id }}"
+            >
+              {{ 'sections.cart.checkout' | t }}
+            </button>
+            {%- if section.settings.cart_button_label != blank -%}
+              <a href="{{ routes.cart_url }}" class="button button-full view-my-cart">
+                {{ section.settings.cart_button_label }}
+              </a>
+            {%- endif -%}
+            <div class="continue_shopping_link">
+              <a href="{{ routes.all_products_collection_url }}" class="continue_shopping">
+                {{- 'sections.cart.continue_shopping' | t -}}
+              </a>
+            </div>
+          </div>
+        {%- else -%}
+          <div class="cart-drawer-empty" role="status">
+            <p>{{ 'sections.cart.empty' | t }}</p>
+          </div>
+          <div class="continue_shopping_link" style="padding-top: 10px;">
+            <a
+              href="{{ routes.all_products_collection_url }}"
+              class="continue_shopping"
+            >
+              {{- 'sections.cart.continue_shopping' | t -}}
+            </a>
+          </div>
+        {%- endif -%}
+      </form>
+    </div>
+  </div>
+</aside>
+
+{% stylesheet %}
+  .cart-drawer-usps {
+    list-style: none;
+    margin: 0;
+    padding: 1rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .cart-drawer-usp {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+  }
+
+  .cart-drawer-usp__icon {
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+
+  .cart-drawer-usp__icon svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .cart-drawer-upsell {
+    padding: 1rem 0;
+  }
+
+  .visually-hidden {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:sections.cart_drawer.name",
+  "enabled_on": {
+    "groups": ["custom.overlay"]
+  },
+  "limit": 1,
+  "settings": [
+    {
+      "type": "text",
+      "id": "cart_button_label",
+      "label": "t:sections.cart_drawer.settings.button_label.label"
+    },
+    {
+      "type": "text",
+      "id": "threshold",
+      "label": "t:sections.cart_drawer.settings.threshold.label",
+      "default": "100"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "upsell",
+      "name": "t:sections.cart_drawer.blocks.upsell.name",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "t:sections.cart_drawer.blocks.upsell.settings.product.label"
+        }
+      ]
+    },
+    {
+      "type": "usp",
+      "name": "t:sections.cart_drawer.blocks.usp.name",
+      "settings": [
+        {
+          "type": "inline_richtext",
+          "id": "icon",
+          "label": "t:sections.cart_drawer.blocks.usp.settings.icon.label",
+          "info": "t:sections.cart_drawer.blocks.usp.settings.icon.info"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "t:sections.cart_drawer.blocks.usp.settings.text.label"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

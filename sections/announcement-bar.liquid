@@ -1,0 +1,697 @@
+{{ 'announcement-bar.css' | asset_url | stylesheet_tag }}
+
+{% liquid
+  assign should_show = true
+  if section.settings.page_exclusions != blank
+    assign excluded_handles = section.settings.page_exclusions | split: ','
+    for handle in excluded_handles
+      assign trimmed_handle = handle | strip
+      assign current_handle = ''
+      
+      if page.handle
+        assign current_handle = page.handle
+      elsif product.handle
+        assign current_handle = product.handle
+      elsif collection.handle
+        assign current_handle = collection.handle
+      elsif article.handle
+        assign current_handle = article.handle
+      elsif blog.handle
+        assign current_handle = blog.handle
+      endif
+      
+      if current_handle == trimmed_handle or template.name == trimmed_handle
+        assign should_show = false
+        break
+      endif
+    endfor
+  endif
+%}
+
+{% if should_show %}
+
+  <section class="section-announcement-bar section-id-{{section.id}} {{ section.settings.animation }}"
+           style="
+             --text-color: {{ section.settings.text_color }}; 
+             --bg-color: {{ section.settings.background_color }};
+             --animation-speed: {{ section.settings.animation_speed }}s;
+             --slider-duration: {{ section.settings.slider_duration }}s;
+           ">
+    {% if section.settings.animation == 'linear' %}
+    <div class="announcement-bar-inner">
+      {% for block in section.blocks %}
+        <div class="inner-text {% if forloop.first %}active{% endif %} p-s" {{ block.shopify_attributes }}>
+          <div class="announcement-content">
+            <span class="announcement-text">{{- block.settings.title -}}</span>
+            {% if block.settings.enable_countdown %}
+              <div class="countdown-display" 
+                  data-block-id="{{ block.id }}"
+                  data-start-date="{{ block.settings.start_date }}" 
+                  data-end-date="{{ block.settings.end_date }}"
+                  data-hide-days="{{ block.settings.hide_days }}"
+                  data-format="{{ block.settings.countdown_format }}"
+                  role="timer"
+                  aria-live="off">
+                <span class="countdown-text">{{ block.settings.countdown_text }}</span>
+                <span class="countdown-days" style="{% if block.settings.hide_days %}display: none;{% endif %}">
+                  <span class="countdown-number">0</span>
+                  <span class="countdown-label" data-singular="day" data-plural="days" data-short="d">days</span>
+                </span>
+                <span class="countdown-hours">
+                  <span class="countdown-number">0</span>
+                  <span class="countdown-label" data-singular="hour" data-plural="hours" data-short="h">hours</span>
+                </span>
+                <span class="countdown-minutes">
+                  <span class="countdown-number">0</span>
+                  <span class="countdown-label" data-singular="minute" data-plural="minutes" data-short="m">minutes</span>
+                </span>
+                <span class="countdown-seconds">
+                  <span class="countdown-number">0</span>
+                  <span class="countdown-label" data-singular="second" data-plural="seconds" data-short="s">seconds</span>
+                </span>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+    {% else %}
+      <div class="infinite-scroll-container">
+        <div class="infinite-scroll-track">
+          {% for i in (1..20) %}
+          {% for block in section.blocks %}
+            <div class="announcement p-s" {{ block.shopify_attributes }}>
+              <div class="announcement-content">
+                <span class="announcement-text">{{ block.settings.title }}</span>
+                {% if block.settings.enable_countdown %}
+                  <div class="countdown-display" 
+                      data-block-id="{{ block.id }}-{{ i }}"
+                      data-start-date="{{ block.settings.start_date }}" 
+                      data-end-date="{{ block.settings.end_date }}"
+                      data-hide-days="{{ block.settings.hide_days }}"
+                      data-format="{{ block.settings.countdown_format }}"
+                      role="timer"
+                      aria-live="off">
+                    <span class="countdown-text">{{ block.settings.countdown_text }}</span>
+                    <span class="countdown-days" style="{% if block.settings.hide_days %}display: none;{% endif %}">
+                      <span class="countdown-number">0</span>
+                      <span class="countdown-label" data-singular="day" data-plural="days" data-short="d">days</span>
+                    </span>
+                    <span class="countdown-hours">
+                      <span class="countdown-number">0</span>
+                      <span class="countdown-label" data-singular="hour" data-plural="hours" data-short="h">hours</span>
+                    </span>
+                    <span class="countdown-minutes">
+                      <span class="countdown-number">0</span>
+                      <span class="countdown-label" data-singular="minute" data-plural="minutes" data-short="m">minutes</span>
+                    </span>
+                    <span class="countdown-seconds">
+                      <span class="countdown-number">0</span>
+                      <span class="countdown-label" data-singular="second" data-plural="seconds" data-short="s">seconds</span>
+                    </span>
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+          {% endfor %}
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+  </section>
+
+  {% if section.settings.enable_bottom_bar %}
+    <div class="bottom-announcement-bar" 
+         id="bottom-announcement-{{ section.id }}"
+         style="
+           --text-color: {{ section.settings.bottom_text_color }}; 
+           --bg-color: {{ section.settings.bottom_background_color }};
+         "
+         role="region"
+         aria-label="Dismissible announcement">
+      <div class="bottom-announcement-content">
+        <div class="bottom-announcement-text">{{ section.settings.bottom_text }}</div>
+        {% if section.settings.bottom_enable_countdown %}
+          <div class="countdown-display bottom-countdown" 
+              data-start-date="{{ section.settings.bottom_start_date }}" 
+              data-end-date="{{ section.settings.bottom_end_date }}"
+              data-hide-days="{{ section.settings.bottom_hide_days }}"
+              data-format="{{ section.settings.bottom_countdown_format }}"
+              role="timer"
+              aria-live="off">
+            <span class="countdown-text">{{ section.settings.bottom_countdown_text }}</span>
+            <span class="countdown-days" style="{% if section.settings.bottom_hide_days %}display: none;{% endif %}">
+              <span class="countdown-number">0</span>
+              <span class="countdown-label" data-singular="day" data-plural="days" data-short="d">days</span>
+            </span>
+            <span class="countdown-hours">
+              <span class="countdown-number">0</span>
+              <span class="countdown-label" data-singular="hour" data-plural="hours" data-short="h">hours</span>
+            </span>
+            <span class="countdown-minutes">
+              <span class="countdown-number">0</span>
+              <span class="countdown-label" data-singular="minute" data-plural="minutes" data-short="m">minutes</span>
+            </span>
+            <span class="countdown-seconds">
+              <span class="countdown-number">0</span>
+              <span class="countdown-label" data-singular="second" data-plural="seconds" data-short="s">seconds</span>
+            </span>
+          </div>
+        {% endif %}
+      </div>
+      <button class="bottom-announcement-close" aria-label="Close announcement" type="button">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true" focusable="false">
+          <path d="M11 1L1 11M1 1L11 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+  {% endif %}
+{% endif %}
+
+<script>
+{% liquid
+  assign has_countdown = false
+  for block in section.blocks
+    if block.settings.enable_countdown
+      assign has_countdown = true
+      break
+    endif
+  endfor
+  if section.settings.enable_bottom_bar and section.settings.bottom_enable_countdown
+    assign has_countdown = true
+  endif
+%}
+
+const announcementIntervals = [];
+
+function initAnnouncementBar(sectionId) {
+  announcementIntervals.forEach(intervalId => clearInterval(intervalId));
+  announcementIntervals.length = 0;
+
+{% if section.settings.enable_bottom_bar %}
+  const bottomBar = document.getElementById('bottom-announcement-' + sectionId);
+  if (bottomBar) {
+    const closeBtn = bottomBar.querySelector('.bottom-announcement-close');
+    const storageKey = 'bottom-announcement-closed-' + sectionId;
+    
+    if (localStorage.getItem(storageKey) === 'true') {
+      bottomBar.style.display = 'none';
+    }
+    
+    const newCloseBtn = closeBtn?.cloneNode(true);
+    if (closeBtn && newCloseBtn) {
+      closeBtn.parentNode.replaceChild(newCloseBtn, closeBtn);
+      newCloseBtn.addEventListener('click', function() {
+        bottomBar.style.display = 'none';
+        localStorage.setItem(storageKey, 'true');
+      });
+    }
+  }
+{% endif %}
+
+{% if section.settings.animation == 'linear' %}
+  const sectionElement = document.querySelector('.section-id-' + sectionId);
+  if (sectionElement) {
+    const messages = sectionElement.querySelectorAll('.inner-text');
+    {% if has_countdown %}
+    let current = 0;
+    const animationSpeed = parseFloat(getComputedStyle(sectionElement).getPropertyValue('--animation-speed')) * 1000 || 4000;
+    
+    function getVisibleMessages() {
+      return Array.from(messages).filter(msg => msg.style.display !== 'none');
+    }
+    
+    function showNextMessage() {
+      const visibleMessages = getVisibleMessages();
+      if (visibleMessages.length <= 1) return;
+      
+      messages[current].classList.remove('active');
+      setTimeout(() => {
+        let nextIndex = (current + 1) % messages.length;
+        let attempts = 0;
+        while (messages[nextIndex].style.display === 'none' && attempts < messages.length) {
+          nextIndex = (nextIndex + 1) % messages.length;
+          attempts++;
+        }
+        current = nextIndex;
+        messages[current].classList.add('active');
+      }, 1000);
+    }
+    {% else %}
+    let current = 0;
+    const animationSpeed = parseFloat(getComputedStyle(sectionElement).getPropertyValue('--animation-speed')) * 1000 || 4000;
+    
+    function showNextMessage() {
+      messages[current].classList.remove('active');
+      current = (current + 1) % messages.length;
+      messages[current].classList.add('active');
+    }
+    {% endif %}
+    
+    if (messages.length > 1) {
+      const intervalId = setInterval(showNextMessage, animationSpeed);
+      announcementIntervals.push(intervalId);
+    }
+    
+    function adjustAnnouncementHeight() {
+      sectionElement.querySelectorAll(".announcement-bar-inner").forEach(section => {
+        const innerTexts = section.querySelectorAll(".inner-text");
+        let maxHeight = 0;
+    
+        innerTexts.forEach(el => {
+          const originalDisplay = el.style.display;
+          const originalVisibility = el.style.visibility;
+          
+          el.style.visibility = "hidden";
+          el.style.display = "block"; 
+          const height = el.offsetHeight;
+          if (height > maxHeight) maxHeight = height;
+          
+          el.style.display = originalDisplay;
+          el.style.visibility = originalVisibility;
+        });
+    
+        section.style.height = maxHeight + "px";
+      });
+    }
+    
+    adjustAnnouncementHeight();
+    
+    function debounce(func, wait) {
+      let timeout;
+      return function executedFunction(...args) {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func(...args), wait);
+      };
+    }
+    
+    window.removeEventListener("resize", adjustAnnouncementHeight);
+    window.addEventListener("resize", debounce(adjustAnnouncementHeight, 250));
+  }
+{% endif %}
+
+{% if has_countdown %}
+  initCountdownTimers(sectionId);
+{% endif %}
+}
+
+{% if has_countdown %}
+function initCountdownTimers(sectionId) {
+  const countdownDisplays = document.querySelectorAll('.section-id-' + sectionId + ' .countdown-display, #bottom-announcement-' + sectionId + ' .countdown-display');
+  if (countdownDisplays.length === 0) return;
+  
+  function parseDate(dateStr) {
+    if (!dateStr) return null;
+    const parts = dateStr.split(' ');
+    const dateParts = parts[0].split('-');
+    const timeParts = parts[1] ? parts[1].split(':') : ['00', '00', '00'];
+    
+    return new Date(
+      parseInt(dateParts[2]), // year
+      parseInt(dateParts[1]) - 1, // month (0-indexed)
+      parseInt(dateParts[0]), // day
+      parseInt(timeParts[0]), // hours
+      parseInt(timeParts[1]), // minutes
+      parseInt(timeParts[2]) // seconds
+    );
+  }
+  
+  function updateLabel(element, value, format) {
+    const label = element.querySelector('.countdown-label');
+    if (!label) return;
+    
+    if (format === 'short') {
+      label.textContent = label.dataset.short;
+    } else {
+      const numValue = Number(value);
+      label.textContent = numValue === 1 ? label.dataset.singular : label.dataset.plural;
+    }
+  }
+  
+  countdownDisplays.forEach(function(countdownDisplay) {
+    const startDate = countdownDisplay.dataset.startDate;
+    const endDate = countdownDisplay.dataset.endDate;
+    const hideDays = countdownDisplay.dataset.hideDays === 'true';
+    const format = countdownDisplay.dataset.format || 'full';
+
+    const daysElement = countdownDisplay.querySelector('.countdown-days');
+    const hoursElement = countdownDisplay.querySelector('.countdown-hours');
+    const minutesElement = countdownDisplay.querySelector('.countdown-minutes');
+    const secondsElement = countdownDisplay.querySelector('.countdown-seconds');
+    
+    const daysNumber = daysElement?.querySelector('.countdown-number');
+    const hoursNumber = hoursElement?.querySelector('.countdown-number');
+    const minutesNumber = minutesElement?.querySelector('.countdown-number');
+    const secondsNumber = secondsElement?.querySelector('.countdown-number');
+
+    function updateCountdown() {
+      const now = new Date().getTime();
+      const startDateObj = startDate ? parseDate(startDate) : null;
+      const endDateObj = parseDate(endDate);
+      
+      const start = startDateObj ? startDateObj.getTime() : now;
+      const end = endDateObj ? endDateObj.getTime() : now;
+
+      if (now < start) {
+        if (countdownDisplay.classList.contains('bottom-countdown')) {
+          const bottomBar = document.getElementById('bottom-announcement-' + sectionId);
+          if (bottomBar) bottomBar.style.display = 'none';
+        } else {
+          const announcementParent = countdownDisplay.closest('.inner-text, .announcement');
+          if (announcementParent) announcementParent.style.display = 'none';
+        }
+        return;
+      }
+
+      if (countdownDisplay.classList.contains('bottom-countdown')) {
+        const bottomBar = document.getElementById('bottom-announcement-' + sectionId);
+        const storageKey = 'bottom-announcement-closed-' + sectionId;
+        if (bottomBar && localStorage.getItem(storageKey) !== 'true') {
+          bottomBar.style.display = 'flex';
+        }
+      } else {
+        const announcementParent = countdownDisplay.closest('.inner-text, .announcement');
+        if (announcementParent) announcementParent.style.display = '';
+      }
+
+      if (now >= end) {
+        if (countdownDisplay.classList.contains('bottom-countdown')) {
+          const bottomBar = document.getElementById('bottom-announcement-' + sectionId);
+          if (bottomBar) bottomBar.remove();
+        } else {
+          const announcementParent = countdownDisplay.closest('.inner-text, .announcement');
+          if (announcementParent) announcementParent.remove();
+        }
+        return;
+      }
+
+      const difference = end - now;
+      
+      const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+      if (daysNumber) {
+        daysNumber.textContent = days;
+        updateLabel(daysElement, days, format);
+        daysElement.style.display = days === 0 ? 'none' : '';
+      }
+      if (hoursNumber) {
+        hoursNumber.textContent = hours;
+        updateLabel(hoursElement, hours, format);
+        hoursElement.style.display = hours === 0 ? 'none' : '';
+      }
+      if (minutesNumber) {
+        minutesNumber.textContent = minutes;
+        updateLabel(minutesElement, minutes, format);
+      }
+      if (secondsNumber) {
+        secondsNumber.textContent = seconds;
+        updateLabel(secondsElement, seconds, format);
+      }
+    }
+
+    updateCountdown();
+    const intervalId = setInterval(updateCountdown, 1000);
+    announcementIntervals.push(intervalId);
+  });
+}
+{% endif %}
+
+initAnnouncementBar('{{ section.id }}');
+
+if (Shopify.designMode) {
+  document.addEventListener('shopify:section:load', function(event) {
+    if (event.detail.sectionId === '{{ section.id }}') {
+      initAnnouncementBar('{{ section.id }}');
+    }
+  });
+
+  document.addEventListener('shopify:section:unload', function(event) {
+    if (event.detail.sectionId === '{{ section.id }}') {
+      announcementIntervals.forEach(intervalId => clearInterval(intervalId));
+      announcementIntervals.length = 0;
+    }
+  });
+
+  document.addEventListener('shopify:block:select', function(event) {
+    if (event.detail.sectionId === '{{ section.id }}') {
+      initAnnouncementBar('{{ section.id }}');
+    }
+  });
+}
+</script>
+
+{% schema %}
+  {
+    "name": "t:sections.announcement-bar.name",
+    "disabled_on": {
+      "groups": ["custom.overlay", "footer"]
+    },
+	"settings": [
+      {
+        "type": "header",
+        "content": "Main announcement bar"
+      },
+      {
+        "type": "select",
+        "id": "animation",
+        "label": "Animation",
+        "options": [
+          {
+            "value": "linear",
+            "label": "Linear"
+          },
+          {
+            "value": "sliding",
+            "label": "Infinite slider"
+          }
+        ],
+        "default": "linear"
+      },
+      {
+        "type": "range",
+        "id": "animation_speed",
+        "label": "Animation speed (linear)",
+        "min": 2,
+        "max": 10,
+        "step": 0.5,
+        "unit": "s",
+        "default": 4,
+        "info": "Time before switching to next announcement",
+        "visible_if": "{{ section.settings.animation  == 'linear' }}"
+      },
+      {
+        "type": "range",
+        "id": "slider_duration",
+        "label": "Slider duration (infinite slider)",
+        "min": 10,
+        "max": 100,
+        "step": 10,
+        "unit": "s",
+        "default": 50,
+        "info": "Duration for one complete scroll cycle",
+        "visible_if": "{{ section.settings.animation  == 'sliding' }}"
+      },
+      {
+        "type": "color",
+        "id": "text_color",
+        "label": "Text color",
+        "default": "#ffffff"
+      },
+      {
+        "type": "color",
+        "id": "background_color",
+        "label": "Background color",
+        "default": "#000000"
+      },
+      {
+        "type": "header",
+        "content": "Bottom dismissible announcement"
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_bottom_bar",
+        "label": "Enable bottom announcement bar",
+        "default": false,
+        "info": "Shows a dismissible announcement at the bottom of the page"
+      },
+      {
+        "type": "richtext",
+        "id": "bottom_text",
+        "label": "Bottom announcement text",
+        "default": "<p>Special offer - Limited time only!</p>",
+        "visible_if": "{{ section.settings.enable_bottom_bar }}"
+      },
+      {
+        "type": "checkbox",
+        "id": "bottom_enable_countdown",
+        "label": "Enable countdown timer",
+        "default": false,
+        "visible_if": "{{ section.settings.enable_bottom_bar }}"
+      },
+      {
+        "type": "richtext",
+        "id": "bottom_countdown_text",
+        "label": "Countdown text",
+        "default": "<p>Ends in</p>",
+        "visible_if": "{{ section.settings.enable_bottom_bar }}"
+      },
+      {
+        "type": "select",
+        "id": "bottom_countdown_format",
+        "label": "Countdown format",
+        "options": [
+          {
+            "value": "full",
+            "label": "Full (days, hours, minutes, seconds)"
+          },
+          {
+            "value": "short",
+            "label": "Short (d, h, m, s)"
+          }
+        ],
+        "default": "full",
+        "visible_if": "{{ section.settings.enable_bottom_bar }}"
+      },
+      {
+        "type": "text",
+        "id": "bottom_start_date",
+        "label": "Countdown start date",
+        "info": "Format: DD-MM-YYYY HH:MM:SS (e.g., 25-12-2026 00:00:00). Leave empty to start immediately",
+        "visible_if": "{{ section.settings.enable_bottom_bar }}"
+      },
+      {
+        "type": "text",
+        "id": "bottom_end_date",
+        "label": "Countdown end date",
+        "default": "31-12-2026 23:59:59",
+        "info": "Format: DD-MM-YYYY HH:MM:SS (e.g., 31-12-2026 23:59:59)",
+        "visible_if": "{{ section.settings.enable_bottom_bar }}"
+      },
+      {
+        "type": "checkbox",
+        "id": "bottom_hide_days",
+        "label": "Hide days in countdown",
+        "default": false,
+        "visible_if": "{{ section.settings.enable_bottom_bar }}"
+      },
+      {
+        "type": "color",
+        "id": "bottom_text_color",
+        "label": "Bottom bar text color",
+        "default": "#ffffff"
+      },
+      {
+        "type": "color",
+        "id": "bottom_background_color",
+        "label": "Bottom bar background color",
+        "default": "#1a1a1a"
+      },
+      {
+        "type": "header",
+        "content": "Visibility"
+      },
+      {
+        "type": "text",
+        "id": "page_exclusions",
+        "label": "Hide on pages",
+        "info": "Enter page handles separated by commas (e.g., about-us, contact). Use template names like 'product', 'collection', etc."
+      }
+	],
+    "blocks": [
+      {
+        "type": "text",
+        "name": "Announcement",
+        "limit": 5,
+        "settings": [
+          {
+            "type": "richtext",
+            "id": "title",
+            "label": "t:sections.announcement-bar.settings.text.label",
+            "default": "<p>Announcement text</p>"
+          },
+          {
+            "type": "header",
+            "content": "Countdown settings"
+          },
+          {
+            "type": "checkbox",
+            "id": "enable_countdown",
+            "label": "Enable countdown timer",
+            "default": false,
+            "info": "Show a countdown timer next to the announcement text"
+          },
+          {
+            "type": "richtext",
+            "id": "countdown_text",
+            "label": "Countdown text",
+            "default": "<p>Ends in</p>",
+            "info": "Text to show before the countdown",
+            "visible_if": "{{ block.settings.enable_countdown }}"
+          },
+          {
+            "type": "select",
+            "id": "countdown_format",
+            "label": "Countdown format",
+            "options": [
+              {
+                "value": "full",
+                "label": "Full (days, hours, minutes, seconds)"
+              },
+              {
+                "value": "short",
+                "label": "Short (d, h, m, s)"
+              }
+            ],
+            "default": "full",
+            "visible_if": "{{ block.settings.enable_countdown }}"
+          },
+          {
+            "type": "text",
+            "id": "start_date",
+            "label": "Countdown start date",
+            "info": "Format: DD-MM-YYYY HH:MM:SS (e.g., 25-12-2026 00:00:00). Leave empty to start immediately",
+            "visible_if": "{{ block.settings.enable_countdown }}"
+          },
+          {
+            "type": "text",
+            "id": "end_date",
+            "label": "Countdown end date",
+            "default": "31-12-2026 23:59:59",
+            "info": "Format: DD-MM-YYYY HH:MM:SS (e.g., 31-12-2026 23:59:59)",
+            "visible_if": "{{ block.settings.enable_countdown }}"
+          },
+          {
+            "type": "checkbox",
+            "id": "hide_days",
+            "label": "Hide days in countdown",
+            "default": false,
+            "info": "Only show hours, minutes, and seconds",
+            "visible_if": "{{ block.settings.enable_countdown }}"
+          }
+        ]
+      }
+    ],
+	"presets": [
+		{
+			"name": "t:sections.announcement-bar.presets.name",
+      "blocks": [
+        {
+          "type": "text",
+          "settings": {
+            "title": "<p>Welcome to our store</p>"
+          }
+        },
+        {
+          "type": "text",
+          "settings": {
+            "title": "<p>Free shipping on orders over $50</p>"
+          }
+        }
+      ]
+		}
+	]
+  }
+{% endschema %}

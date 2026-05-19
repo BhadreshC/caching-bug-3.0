@@ -1,0 +1,85 @@
+{{ 'image-with-text.css' | asset_url | stylesheet_tag }}
+{%- if section.settings.image != blank or section.settings.mb-image != blank or section.settings.title != blank or section.settings.text != blank or section.settings.btn-link != blank or section.settings.btn-label != blank -%}
+<section class="section-image-with-text section-id-{{ section.id }}">
+  <div class="img-with-text img-position-{{ section.settings.image-position }}">
+    <div class="img-text-media">
+      {%- if section.settings.image != blank or section.settings.mb-image != blank -%}
+        {%- render 'media', media: section.settings.image, mobile_media: section.settings.mb_image -%}
+      {%- else -%}
+        {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+      {%- endif -%}
+    </div>
+    {%- if section.settings.title != blank or section.settings.text != blank or section.settings.btn-link != blank or section.settings.btn-label != blank -%}
+    <div class="img-text-meta">
+      <div class="img-text-meta-inr">
+        {%- if section.settings.title != blank -%}<h2>{{ section.settings.title }}</h2>{%- endif -%}
+        {%- if section.settings.text != blank -%}<div class="img-text-text">{{ section.settings.text }}</div>{%- endif -%}
+        {%- if section.settings.btn-link != blank or section.settings.btn-label != blank -%}
+          <a href="{{ section.settings.btn-link }}">{{ section.settings.btn-label }}</a>
+        {%- endif -%}
+      </div>
+    </div>
+    {%- endif -%}
+  </div>
+</section>
+{%- endif -%}
+{% schema %}
+{
+  "name": "Image with Text",
+  "disabled_on": {
+    "groups": ["header", "custom.overlay"]
+  },
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "mb-image",
+      "label": "Mobile Image"
+    },
+    {
+      "type": "select",
+      "id": "image-position",
+      "label": "Image Position",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "right",
+          "label":"Right"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text"
+    },
+    {
+      "type": "text",
+      "id": "btn-label",
+      "label": "Button Label"
+    },
+    {
+      "type": "url",
+      "id": "btn-link",
+      "label": "Button Link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Image with Text"
+    }
+  ]
+}
+{% endschema %}

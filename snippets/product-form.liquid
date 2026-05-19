@@ -1,0 +1,41 @@
+  {% style %}
+.swatch-list {display: flex;gap: 10px;flex-wrap: wrap;}
+.swatch-item {cursor: pointer;}
+.swatch-item input {display: none;}
+.swatch-label {padding: 8px 14px;border: 1px solid #ccc;display: inline-block;}
+.swatch-item.active .swatch-label {border-color: #000;background: #000;color: #fff;}
+.quantity-selector{display:flex;gap:10px;max-width:300px;width:100%;}
+#quantity{text-align:center;}
+  {% endstyle %}
+  
+  <div class="product-form-snippet">
+    {% form 'product', product %}
+
+       {% render 'variant-picker' , product:product %}
+
+        <div class="product-form__group quantity-wrapper">
+        <label>{{ 'products.quantity' | t }}:</label>
+
+        <div class="quantity-selector">
+            <button type="button" class="qty-btn qty-minus" aria-label="Decrease quantity">−</button>
+            <input
+            type="text"
+            name="quantity"
+            id="quantity"
+            min="1"
+            value="1"
+            inputmode="numeric"
+            readonly
+            >
+            <button type="button" class="qty-btn qty-plus" aria-label="Increase quantity">+</button>
+        </div>
+        </div>
+
+      <div class="product-form__actions">
+        <input type="submit" value="{{ 'products.add_to_cart' | t }}" class="button"  data-add-text="{{ 'products.add_to_cart' | t }}"  data-soldout-text="{{ 'products.sold_out' | t }}">
+        {{ form | payment_button }}
+      </div>
+    {% endform %}
+  </div>
+
+<script src="{{ 'product-form.js' | asset_url }}"></script>

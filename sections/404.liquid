@@ -1,0 +1,132 @@
+{% comment %}
+  This section is used in the 404 template to render page shown when customers
+  enter an invalid store URL.
+
+  https://shopify.dev/docs/storefronts/themes/architecture/templates/404
+{% endcomment %}
+
+{{ 'main-404.css' | asset_url | stylesheet_tag }}
+<section class="section-main-404 section-{{ section.id }}">
+  <div class="main-404-wrapper">
+    {% if section.settings.image != blank or section.settings.video != blank %}
+    <div class="media">
+      {%- if section.settings.media_type == 'video' -%}
+        {%- if section.settings.mb_media_type == 'video' -%}
+          {%- render 'media', media: section.settings.video, mobile_media: section.settings.mb_video, autoplay: true, loop: true, muted: true -%}
+        {%- else -%}
+          {%- render 'media', media: section.settings.video, mobile_media: section.settings.mb_image, autoplay: true, loop: true, muted: true -%}
+        {%- endif -%}
+      {%- else -%}
+        {%- if section.settings.mb_media_type == 'video' -%}
+          {%- render 'media', media: section.settings.image, mobile_media: section.settings.mb_video -%}
+        {%- else -%}
+          {%- render 'media', media: section.settings.image, mobile_media: section.settings.mb_image -%}
+        {%- endif -%}
+      {%- endif -%}
+    </div>
+    {% endif %}
+    <div class="content">
+      {% if section.settings.title != blank %}
+        <h1>{{ section.settings.title }}</h1>
+      {% endif %}
+      {% if section.settings.subtitle != blank %}
+        <p>{{ section.settings.subtitle }}</p>
+      {% endif %}
+      {% if section.settings.btn_label != blank %}
+        <a href="{{ section.settings.btn_link }}">{{ section.settings.btn_label }}</a>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "t:general.404",
+  "settings": [
+    {
+        "type":"header",
+        "content":"Desktop"
+    },
+    {
+        "type":"select",
+        "id":"media_type",
+        "label":"Media Type",
+        "options":[
+            {
+            "label":"Image",
+            "value":"image"
+            },
+            {
+            "label":"Video",
+            "value":"video"
+            }
+        ]
+    },
+    {
+        "type":"image_picker",
+        "id":"image",
+        "label":"Image",
+        "visible_if": "{{ section.settings.media_type == 'image' }}"
+    }, 
+    {
+        "type": "video",
+        "id": "video",
+        "label": "Video mp4",
+        "info": "Replaces external video if both are set.",
+        "visible_if": "{{ section.settings.media_type == 'video' }}"
+    },
+    {
+        "type":"header",
+        "content":"Mobile"
+    },
+    {
+        "type":"select",
+        "id":"mb_media_type",
+        "label":"Media Type",
+        "options":[
+            {
+            "label":"Image",
+            "value":"image"
+            },
+            {
+            "label":"Video",
+            "value":"video"
+            }
+        ]
+    },
+    {
+        "type":"image_picker",
+        "id":"mb_image",
+        "label":"Image",
+        "visible_if": "{{ section.settings.mb_media_type == 'image' }}"
+    },
+    {
+        "type": "video",
+        "id": "mb_video",
+        "label": "Video mp4",
+        "info": "Replaces external video if both are set.",
+        "visible_if": "{{ section.settings.mb_media_type == 'video' }}"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Sub title"
+    },
+    {
+      "type": "text",
+      "id": "btn_label",
+      "label": "Button label"
+    },
+    {
+      "type": "url",
+      "id": "btn_link",
+      "label": "Button link"
+    }
+  ]
+}
+{% endschema %}

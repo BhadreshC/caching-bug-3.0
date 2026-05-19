@@ -1,0 +1,60 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "type": "header",
+  "name": "t:general.header",
+  "sections": {
+    "announcement-bar": {
+      "type": "announcement-bar",
+      "blocks": {
+        "text_CEhPdf": {
+          "type": "text",
+          "settings": {
+            "title": "<p>This is block 2</p>"
+          }
+        },
+        "text_UEcnmy": {
+          "type": "text",
+          "settings": {
+            "title": "<p>This is block 1</p>"
+          }
+        }
+      },
+      "block_order": [
+        "text_CEhPdf",
+        "text_UEcnmy"
+      ],
+      "settings": {
+        "animation": "linear",
+        "enable_countdown": true,
+        "countdown_text": "The Archive Closes in",
+        "start_date": "2025-05-12 15:01:00",
+        "end_date": "2026-06-12 23:59:59",
+        "hide_days": false
+      }
+    },
+    "header": {
+      "type": "header",
+      "settings": {
+        "logo_type": "image",
+        "svg_logo": "",
+        "menu": "",
+        "enable_sticky": false,
+        "enable_search": true,
+        "cart_icon": "",
+        "page_handle": ""
+      }
+    }
+  },
+  "order": [
+    "announcement-bar",
+    "header"
+  ]
+}

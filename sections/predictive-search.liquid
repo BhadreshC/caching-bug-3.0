@@ -1,0 +1,43 @@
+<div id="predictive-search-results" data-count="4">
+  <div class="top-result">
+    {%- if search.results_count == 0 -%}
+    {{- 'search.no_result' | t -}}
+    {%- else -%}
+    {{- 'search.results_with_count' | t: terms: predictive_search.terms, count: predictive_search.resources.products.size -}}
+    {%- endif -%}
+  </div>
+  <div class="search-row">
+    {%- for product in predictive_search.resources.products limit:settings.desktop_suggestion -%}
+    <div class="search-column">
+      <div class="collection-product">
+        {% if product.featured_image %}
+          {% render 'image',
+            class: 'collection-product__image',
+            image: product.featured_image,
+            url: product.url,
+            width: 400,
+            height: 400,
+            crop: 'center'
+          %}
+        {% endif %}
+        <div class="collection-product__content">
+          <h3 class="collection-product__title">
+            {{ product.title | escape | link_to: product.url }}
+          </h3>
+          <div class="collection-product__price">{{ product.price | money }}</div>
+        </div>
+      </div>      
+    </div>
+    {%- endfor -%}    
+  </div>
+  {%- if predictive_search.resources.products.size > 0 -%} 
+  <div class="bottom-search-button">    
+    <form action="{{ routes.search_url }}" method="get" role="search" class="hidden-search">
+      <input id="SearchValue" type="hidden" name="q" value="{{ search.terms | escape }}" role="combobox" aria-expanded="false" aria-owns="predictive-search-results-list" aria-controls="predictive-search-results-list" aria-haspopup="listbox" aria-autocomplete="list" autocorrect="off" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="{{section.settings.search_placeholder}}">
+      <input name="options[prefix]" type="hidden" value="last">
+      <input type="hidden" name="type" value="product" />
+      <button type="submit" class="button">{{- 'search.search_label' | t -}}</button>
+    </form>
+  </div>
+  {%- endif -%}
+</div>

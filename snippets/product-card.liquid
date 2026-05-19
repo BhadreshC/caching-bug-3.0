@@ -1,0 +1,136 @@
+<div class="snippet-product-card">
+  {%- assign first_variant = product.selected_or_first_available_variant -%}
+  <div class="grid-imagebox">
+  <a href="{{ product.url }}" class="product-link">
+    {%- comment -%}<!---------Product Badge--------------------->{%- endcomment -%}
+    {%- assign badge = false -%}
+    {%- for i in (1..5) -%}
+    	{%- capture temp_badge -%}badge_{{i}}{%- endcapture -%}
+    	{%- assign badgetitle = settings[temp_badge] | handle -%}
+    	{%- capture temp_badge_text -%}badge_text_{{i}}{%- endcapture -%}
+    	{%- assign badge_text = settings[temp_badge_text] -%}
+    	{%- capture temp_badge_background -%}badge_background_{{i}}{%- endcapture -%}
+    	{%- assign badge_background = settings[temp_badge_background] -%}
+    	{%- for tag in product.tags -%}
+    		{%- assign badge_tag = tag | handle -%}
+    		{%- if badgetitle == badge_tag -%}
+    			{%- assign badge = true -%}
+    		{%- endif -%}
+    	{%- endfor -%}
+    {%- endfor -%}
+    {%- if badge -%}
+    <div class="grid-badge">
+      {%- for i in (1..5) -%}
+          {%- capture temp_badge -%}badge_{{i}}{%- endcapture -%}
+          {%- assign badgetitle = settings[temp_badge] | handle -%}
+          {%- capture temp_badge_text -%}badge_text_{{i}}{%- endcapture -%}
+          {%- assign badge_text = settings[temp_badge_text] -%}
+          {%- capture temp_badge_background -%}badge_background_{{i}}{%- endcapture -%}
+          {%- assign badge_background = settings[temp_badge_background] -%}
+          {%- for tag in product.tags -%}
+              {%- assign badge_tag = tag | handle -%}
+              {%- if badgetitle == badge_tag -%}
+                <span style="color:{{badge_text}};background:{{badge_background}}">{{- tag -}}</span>
+              {%- endif -%}
+          {%- endfor -%}
+      {%- endfor -%}
+    </div>
+    {%- endif -%}
+    {%- comment -%}<!---------Product Image--------------------->{%- endcomment -%}
+    <div class="product-images">
+      {%- assign video_img = false -%}
+      {%- for media in product.media limit:1 -%}
+        {%- if media.media_type == 'video' or media.media_type == 'external_video' or  media.media_type == 'model' -%}
+        	{%- assign video_img = true -%}
+      	{%- endif -%}
+      {%- endfor -%}
+    {%- if video_img -%}
+      	{%- for media in product.media limit:1 -%}
+      	{%- liquid
+          case media.media_type
+          when 'external_video'
+            assign video_class = 'js-' | append: media.host
+            if media.host == 'youtube'
+              echo media | external_video_url: autoplay: true, loop: loop, playlist: media.external_id | external_video_tag: class: video_class, loading: "lazy"
+            else
+              echo media | external_video_url: autoplay: true, loop: loop | external_video_tag: class: video_class, loading: "lazy"
+            endif
+          when 'video'
+            echo media | media_tag: image_size: "2048x", autoplay: true, loop: true, controls: false, preload: "none", autoplay: true, muted: true
+          when 'model'
+            echo media | media_tag: image_size: "2048x", toggleable: true
+          endcase
+        -%}
+      	{%- endfor -%}
+      	{%- if settings.enable_image_hover and product.media[1] -%}
+          {{- product.media[1] | image_url:width:500 | image_tag:loading:'lazy',class:'second-image' -}}
+        {%- endif -%}
+    {%- elsif product.featured_media != blank -%}
+      {{- product.featured_media | image_url:width:500 | image_tag:loading:'lazy' -}}
+      {%- if settings.enable_image_hover and product.media[1] -%}
+        {{- product.media[1] | image_url:width:500 | image_tag:loading:'lazy',class:'second-image' -}}   
+      {%- endif -%}
+    {%- else -%}
+    {{- 'image' | placeholder_svg_tag: 'placeholder-svg' -}}
+    {%- endif -%}    
+    </div>    
+  </a>
+  {%- comment -%}<!---------Product Size Variants--------------------->{%- endcomment -%}
+  {%- if settings.show_size_Selector -%}
+    {%- if product.available and product.variants.size > 1 -%}      
+      {%- assign detail_selector = false -%}
+      {%- if settings.size_selector == 'go_to_detail' -%}
+    	{%- assign detail_selector = true -%}    
+      {%- endif -%}
+      {%- for option in product.options -%}
+        {%- assign optionname = option | downcase -%}
+        {%- if optionname contains 'size' or optionname contains 'Size' -%}
+          <div class="grid-variant-outer {% unless settings.show_quickbuy_mobile %}hide-variant-mobile{% endunless %}">
+            <div class="grid-error"></div>
+            <ul class="grid-size-variants list--inline {% unless detail_selector %}direct-cart-list{% endunless %}">
+            {%- assign optionindex = forloop.index0 -%}
+            {%- assign values = '' -%}
+            {%- for variant in product.variants -%}
+              {%- assign value = variant.options[optionindex] -%}
+              {%- unless values contains value  -%}
+                  {%- assign values = values | join:',' -%}
+                  {%- assign values = values | append:',' | append:value -%}
+                  {%- assign values = values | split:',' -%}
+                  {%- if variant.available -%}
+                  <li data-id="{{variant.id}}" class="variant-grid">
+                    {%- if detail_selector -%}
+                    <a href="{{ variant.url }}" data-id="{{variant | json}}">{{- value -}}</a>
+                    {%- else -%}
+                    {{- value -}}
+              		{%- endif -%}
+              	  </li>
+                  {%- endif -%}
+              {%- endunless -%}
+            {%- endfor -%}
+            </ul>
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+    {%- else -%}
+    <div class="grid-variant-outer {% unless settings.show_quickbuy_mobile %}hide-variant-mobile{% endunless %}">
+      <div class="grid-error"></div>
+      <a href="javascript:void(0)" data-id="{{first_variant.id}}" class="variant-grid quick-add button button-full">{{'products.quick_button' | t }}</a>   
+    </div>
+    {%- endif -%}
+  {%- endif -%}
+  </div>
+  <div class="grid-meta">
+    {% if settings.enable_vendor %}
+        <h5>{{ product.vendor }}</h5>
+    {% endif %}
+    <p><a href="{{ product.url }}">{{- product.title -}}</a></p>
+    <p>
+      {{- product.price | money -}}
+      {% if settings.enable_compare %}
+      {%- if product.compare_at_price > product.price -%}
+      <span class="compare-price">{{- product.compare_at_price | money -}}</span>
+      {%- endif -%}
+      {% endif %}
+    </p>
+  </div>
+</div>

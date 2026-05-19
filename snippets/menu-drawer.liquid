@@ -1,0 +1,10 @@
+<div class="snippet-menu-drawer">
+  <a href="#" class="close-menu">{{ 'icon-close.svg' | inline_asset_content }}</a>
+  <div class="menu-drawer-inner">
+    <ul class="mobile-nav">
+      {%- for link in linklists[section.settings.menu].links -%}
+      <li><a href="{{link.url}}">{{link.title}}</a></li>
+      {%- endfor -%}
+    </ul>
+  </div>
+</div>

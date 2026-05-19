@@ -1,0 +1,20 @@
+#shopify-section-footer{margin-top:auto;}
+.footer-navigation h6{margin-bottom:16px;}
+.footer-navigation ul li{padding:8px 0px;}
+.footer-navigation,.footer-newsletter{text-align:left;display:inline-block;padding:0px 15px;}
+.footer-bottom-row{display:flex;justify-content:space-between;align-items:center;}
+.footer-payment{list-style-type: none;padding: 0;display: flex;gap: 10px;margin:0;}
+.social-media{padding: 0;list-style-type: none;display: flex;gap:10px;margin:0;}
+.social-media svg{height:24px;width:24px;}
+@media(min-width:992px){
+.footer-row{display:grid;grid-auto-columns: minmax(0, 1fr); grid-auto-flow: column;}
+}
+@media(max-width:991px){
+  .footer-row{display: flex;flex-wrap: wrap;}
+  .column-navigation{width:100%;flex:0 0 auto;order:2;text-align:left;}
+  .column-newsletter{order:1;width:100%;flex:0 0 auto;text-align:left;}
+  .footer-navigation, .footer-newsletter{padding:0;display:block;width:100%;}
+  .hide-footer-nav{display:none;}
+  .footer-bottom-row{flex-direction: column;}
+  .footer-payment svg{width:30px;}
+}

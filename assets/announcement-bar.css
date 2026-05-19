@@ -1,0 +1,202 @@
+/* Main announcement bar */
+.section-announcement-bar {
+  text-align: center;
+  position: relative;
+  color: var(--text-color, #ffffff);
+  background-color: var(--bg-color, #000000);
+}
+
+.section-announcement-bar.linear .announcement-bar-inner {
+  position: relative;
+}
+
+.section-announcement-bar.linear .inner-text {
+  position: absolute;
+  width: 100%;
+  opacity: 0;
+  margin: 0;
+  transition: opacity 1s ease-in-out;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 6px 44px;
+  will-change: opacity;
+}
+
+.section-announcement-bar.linear .inner-text.active {
+  opacity: 1;
+}
+
+.section-announcement-bar.sliding .infinite-scroll-container {
+  overflow: hidden;
+  width: 100%;
+  position: relative;
+}
+
+.section-announcement-bar.sliding .infinite-scroll-track {
+  display: flex;
+  gap: 24px;
+  width: max-content;
+  animation: scroll-left var(--slider-duration, 120s) linear infinite;
+  will-change: transform;
+}
+
+.section-announcement-bar.sliding {
+  padding: 6px 40px 6px 24px;
+}
+
+@keyframes scroll-left {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.announcement-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.announcement-text {
+  display: inline-block;
+}
+
+/* Bottom dismissible announcement bar */
+.bottom-announcement-bar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 50px 12px 20px;
+  color: var(--text-color, #ffffff);
+  background-color: var(--bg-color, #1a1a1a);
+  text-align: center;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.bottom-announcement-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.bottom-announcement-text {
+  display: inline-block;
+}
+
+.bottom-announcement-close {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  color: currentColor;
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.8;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  border-radius: 4px;
+  min-width: 28px;
+  min-height: 28px;
+}
+
+.bottom-announcement-close:hover {
+  opacity: 1;
+  transform: translateY(-50%) scale(1.1);
+}
+
+.bottom-announcement-close:focus {
+  opacity: 1;
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+.bottom-announcement-close:focus:not(:focus-visible) {
+  outline: none;
+}
+
+.bottom-announcement-close:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+/* Countdown display */
+.countdown-display {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+
+.countdown-text {
+  margin-right: 5px;
+}
+
+.countdown-days,
+.countdown-hours,
+.countdown-minutes,
+.countdown-seconds {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 3px;
+}
+
+.countdown-number {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.countdown-label {
+  font-size: 0.9em;
+}
+
+/* Performance: Reduce paint on animations */
+@media (prefers-reduced-motion: reduce) {
+  .section-announcement-bar.linear .inner-text {
+    transition: none;
+  }
+  
+  .section-announcement-bar.sliding .infinite-scroll-track {
+    animation: none;
+  }
+  
+  .bottom-announcement-close {
+    transition: none;
+  }
+}
+
+@media (max-width: 991px) {
+  .infinite-scroll-track {
+    gap: 16px;
+  }
+  
+  .bottom-announcement-bar {
+    padding: 10px 40px 10px 15px;
+  }
+  
+  .bottom-announcement-close {
+    right: 10px;
+    min-width: 24px;
+    min-height: 24px;
+    padding: 6px;
+  }
+}
+
+/* Ensure sufficient color contrast - WCAG AA compliance */
+@media (prefers-contrast: more) {
+  .bottom-announcement-close {
+    opacity: 1;
+  }
+}
+

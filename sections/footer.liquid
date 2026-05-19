@@ -1,0 +1,104 @@
+{{ 'footer.css' | asset_url | stylesheet_tag }}
+<footer class="section-footer section-id-{{section.id}}">
+  <div class="footer-main">
+    <div class="footer-row">
+    {%- for block in section.blocks -%}
+      {%- render 'footer-blocks' , block:block , section:section -%}
+    {%- endfor -%}
+    </div>
+  </div>
+
+  <div class="footer-bottom-row">
+    {% if section.settings.enable_social %}
+      {% render 'social-media' %}
+    {% endif %}
+    {% if section.settings.localize != blank %}
+      <div class="localization-blocks">
+        {{ section.settings.localize }}
+      </div>
+    {% endif %}
+    {% if section.settings.enable_payment %}
+      {% render 'payment-icons' %}
+    {% endif %}
+  </div>
+</footer>
+{% schema %}
+{
+  "name": "t:sections.footer.name",
+  "settings": [
+	{
+		"type":"checkbox",
+		"id":"enable_payment",
+		"label":"t:sections.footer.settings.enable_payment.label",
+		"default":true
+	},
+	{
+		"type":"checkbox",
+		"id":"enable_social",
+		"label":"t:sections.footer.settings.enable_social.label",
+		"default":true
+	},
+  {
+    "type": "html",
+    "id": "localize",
+    "label": "Localization Snippet"
+  }
+  ],
+  "blocks":[
+	{
+		"name":"t:sections.footer.blocks.navigation.name",
+		"type":"navigation",
+		"settings":[
+			{
+				"type":"range",
+				"id":"grid",
+				"label":"t:sections.footer.blocks.grid",
+				"min":1,
+				"max":12,
+				"default":2
+			},
+			{
+				"type":"text",
+				"id":"title",
+				"label":"t:sections.footer.blocks.navigation.settings.title.label"
+			},
+			{
+				"type":"link_list",
+				"id":"menu",
+				"label":"t:sections.footer.blocks.navigation.settings.menu.label"
+			},
+			{
+				"type":"checkbox",
+				"id":"hide_mobile",
+				"label":"t:sections.footer.blocks.navigation.settings.hide_mobile.label"
+			}
+		]
+	},
+	{
+		"name":"t:sections.footer.blocks.newsletter.name",
+		"type":"newsletter",
+    "limit": 1,
+		"settings":[
+			{
+				"type":"range",
+				"id":"grid",
+				"label":"t:sections.footer.blocks.grid",
+				"min":1,
+				"max":12,
+				"default":6
+			},
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Title"
+      },
+			{
+				"type":"html",
+				"id":"html",
+				"label":"t:sections.footer.blocks.newsletter.settings.title.label"
+			}
+		]
+	}
+  ]
+}
+{% endschema %}

@@ -1,0 +1,27 @@
+{% comment %}
+  This section is used in the page template to render store pages like About us
+  or Contact us.
+
+  https://shopify.dev/docs/storefronts/themes/architecture/templates/page
+{% endcomment %}
+<section class="section-page section-id-{{ section.id }}">\
+    {% if section.settings.enable_breadcrumb %}
+      {% render 'breadcrumb' %}
+  {% endif %}
+<h1>{{ page.title }}</h1>
+
+{{ page.content }}
+</section>
+{% schema %}
+{
+  "name": "t:general.page",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enable_breadcrumb",
+      "label": "Enable Breadcrumb",
+      "default": true
+    }
+  ]
+}
+{% endschema %}

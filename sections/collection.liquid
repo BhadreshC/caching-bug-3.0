@@ -1,0 +1,504 @@
+{{ 'collection.css' | asset_url | stylesheet_tag }}
+{{ 'product-card.css' | asset_url | stylesheet_tag }}
+
+{%- assign limit = section.settings.product_limit -%}
+{%- assign load_mode = section.settings.load_more_option -%}
+{%- assign columns_desktop = section.settings.columns_desktop | default: 4 -%}
+{%- assign columns_mobile = section.settings.columns_mobile | default: 2 -%}
+
+{%- assign has_active_filters = false -%}
+{%- for filter in collection.filters -%}
+  {%- if filter.active_values.size > 0 -%}
+    {%- assign has_active_filters = true -%}
+    {%- break -%}
+  {%- endif -%}
+{%- endfor -%}
+
+{%- paginate collection.products by limit -%}
+
+<section
+  class="section-collection section-id-{{ section.id }}"
+  data-section-id="{{ section.id }}"
+  data-load-more="{{ load_mode }}"
+  data-total-pages="{{ paginate.pages }}"
+  data-current-page="{{ paginate.current_page }}"
+  data-products-count="{{ collection.products_count }}"
+  aria-label="{{ collection.title | escape }}"
+>
+  {%- comment -%} ── Collection header ── {%- endcomment -%}
+  <header class="collection-header">
+    <h1 class="collection-title">{{ collection.title }}</h1>
+    {% if collection.description != blank %}
+      <div class="collection-description">{{ collection.description }}</div>
+    {% endif %}
+  </header>
+
+  {%- comment -%} ── Filter bar ── {%- endcomment -%}
+  <div class="collection-toolbar" role="toolbar" aria-label="{{ 'sections.collection.toolbar_label' | t }}">
+    <button
+      type="button"
+      class="collection-filter-toggle button"
+      aria-expanded="false"
+      aria-controls="collection-filter-drawer-{{ section.id }}"
+    >
+      {{ 'sections.collection.filter' | t }}
+    </button>
+
+    <div class="collection-sort">
+      <label for="sort-by-{{ section.id }}" class="visually-hidden">{{ 'sections.collection.sort_by' | t }}</label>
+      <select id="sort-by-{{ section.id }}" class="collection-sort-select" aria-label="{{ 'sections.collection.sort_by' | t }}">
+        {%- for option in collection.sort_options -%}
+          <option value="{{ option.value }}" {% if collection.sort_by == option.value %}selected{% endif %}>
+            {{ option.name }}
+          </option>
+        {%- endfor -%}
+      </select>
+    </div>
+
+    <p class="collection-count" aria-live="polite">
+      {{ 'sections.collection.product_count' | t: count: collection.products_count }}
+    </p>
+  </div>
+
+  {%- comment -%} ── Filter drawer ── {%- endcomment -%}
+  <aside
+    id="collection-filter-drawer-{{ section.id }}"
+    class="collection-filter-drawer collection-filter-drawer--{{ section.settings.filter_position }}"
+    role="dialog"
+    aria-modal="true"
+    aria-label="{{ 'sections.collection.filter' | t }}"
+    aria-hidden="true"
+    tabindex="-1"
+  >
+    <div class="collection-filter-drawer__inner">
+      <div class="collection-filter-drawer__header">
+        <h2 class="h3">{{ 'sections.collection.filter' | t }}</h2>
+        <button
+          type="button"
+          class="collection-filter-close"
+          aria-label="{{ 'sections.collection.close_filter' | t }}"
+        >
+          {{ "icon-close.svg" | inline_asset_content }}
+        </button>
+      </div>
+
+      <form class="collection-filter-form" data-collection-url="{{ collection.url }}">
+        {%- for filter in collection.filters -%}
+          <details class="collection-filter-group" open>
+            <summary class="collection-filter-group__title">
+              {{ filter.label }}
+            </summary>
+
+            <div class="collection-filter-group__body">
+              {%- case filter.type -%}
+                {%- when 'list' -%}
+                  <ul class="collection-filter-list" role="group" aria-label="{{ filter.label | escape }}">
+                    {%- for value in filter.values -%}
+                      <li class="collection-filter-item">
+                        <label class="collection-filter-label">
+                          <input
+                            type="checkbox"
+                            name="{{ value.param_name }}"
+                            value="{{ value.value }}"
+                            {% if value.active %}checked{% endif %}
+                            {% if value.count == 0 and value.active == false %}disabled{% endif %}
+                          >
+                          <span>{{ value.label }}</span>
+                          <span class="collection-filter-count" aria-hidden="true">({{ value.count }})</span>
+                        </label>
+                      </li>
+                    {%- endfor -%}
+                  </ul>
+
+                {%- when 'price_range' -%}
+                  <div class="collection-filter-price" role="group" aria-label="{{ filter.label | escape }}">
+                    <div class="collection-filter-price__field">
+                      <label for="filter-{{ filter.param_name }}-gte-{{ section.id }}">
+                        {{ 'sections.collection.price_from' | t }}
+                      </label>
+                      <input
+                        type="number"
+                        id="filter-{{ filter.param_name }}-gte-{{ section.id }}"
+                        name="{{ filter.min_value.param_name }}"
+                        value="{{ filter.min_value.value | money_without_currency | replace: ',', '' }}"
+                        min="0"
+                        max="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
+                        placeholder="0"
+                      >
+                    </div>
+                    <div class="collection-filter-price__field">
+                      <label for="filter-{{ filter.param_name }}-lte-{{ section.id }}">
+                        {{ 'sections.collection.price_to' | t }}
+                      </label>
+                      <input
+                        type="number"
+                        id="filter-{{ filter.param_name }}-lte-{{ section.id }}"
+                        name="{{ filter.max_value.param_name }}"
+                        value="{{ filter.max_value.value | money_without_currency | replace: ',', '' }}"
+                        min="0"
+                        max="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
+                        placeholder="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
+                      >
+                    </div>
+                  </div>
+              {%- endcase -%}
+            </div>
+          </details>
+        {%- endfor -%}
+
+        <div class="collection-filter-actions">
+          <button type="submit" class="button collection-filter-apply" aria-live="polite">
+            {{ 'sections.collection.show_results' | t: count: collection.products_count }}
+          </button>
+          {% if has_active_filters %}
+            <a href="{{ collection.url }}" class="collection-filter-clear">
+              {{ 'sections.collection.clear_all' | t }}
+            </a>
+          {% endif %}
+        </div>
+      </form>
+    </div>
+  </aside>
+
+  {%- comment -%} ── Active filters ── {%- endcomment -%}
+  {% if has_active_filters %}
+    <div class="collection-active-filters" role="list" aria-label="{{ 'sections.collection.active_filters' | t }}">
+      {%- for filter in collection.filters -%}
+        {%- for value in filter.active_values -%}
+          <a
+            href="{{ value.url_to_remove }}"
+            class="collection-active-tag"
+            role="listitem"
+            aria-label="{{ 'sections.collection.remove_filter' | t: label: value.label }}"
+          >
+            {{ value.label }}
+            <span aria-hidden="true">&times;</span>
+          </a>
+        {%- endfor -%}
+      {%- endfor -%}
+      <a href="{{ collection.url }}" class="collection-active-clear">
+        {{ 'sections.collection.clear_all' | t }}
+      </a>
+    </div>
+  {% endif %}
+
+  {%- comment -%} ── Product grid ── {%- endcomment -%}
+  <div
+    id="product-grid-{{ section.id }}"
+    class="collection-grid"
+    style="--columns-desktop: {{ columns_desktop }}; --columns-mobile: {{ columns_mobile }};"
+    role="list"
+    aria-label="{{ 'sections.collection.products_label' | t }}"
+    aria-live="polite"
+  >
+    {%- if collection.products.size == 0 -%}
+      <p class="collection-empty" role="status">
+        {{ 'sections.collection.empty' | t }}
+      </p>
+    {%- endif -%}
+
+    {%- assign promo_blocks = section.blocks | where: 'type', 'promo-media' -%}
+    {%- assign product_index = 0 -%}
+
+    {%- for product in collection.products -%}
+      {%- assign product_index = product_index | plus: 1 -%}
+
+      {%- comment -%} Insert promo blocks at configured positions {%- endcomment -%}
+      {%- for block in promo_blocks -%}
+        {%- assign desk_row = block.settings.desktop_row | default: 1 -%}
+        {%- assign desk_col = block.settings.desktop_column | default: 1 -%}
+        {%- assign mob_row = block.settings.mobile_row | default: 1 -%}
+        {%- assign mob_col = block.settings.mobile_column | default: 1 -%}
+
+        {%- comment -%}
+          Calculate the linear position for desktop and mobile grids.
+          Position = (row - 1) * columns + column
+        {%- endcomment -%}
+        {%- assign desk_position = desk_row | minus: 1 | times: columns_desktop | plus: desk_col -%}
+        {%- assign mob_position = mob_row | minus: 1 | times: columns_mobile | plus: mob_col -%}
+
+        {%- if product_index == desk_position or product_index == mob_position -%}
+          <div
+            class="collection-promo-card {% if product_index == desk_position %}collection-promo-card--desktop{% endif %} {% if product_index == mob_position %}collection-promo-card--mobile{% endif %}"
+            role="listitem"
+            style="--promo-desk-row: {{ desk_row }}; --promo-desk-col: {{ desk_col }}; --promo-mob-row: {{ mob_row }}; --promo-mob-col: {{ mob_col }};"
+            {{ block.shopify_attributes }}
+          >
+            <div class="collection-promo-card__media">
+              {%- if block.settings.desktop_media_type == 'video' -%}
+                {%- if block.settings.mobile_media_type == 'video' -%}
+                  {%- render 'media', media: block.settings.desktop_video, mobile_media: block.settings.mobile_video, class: 'collection-promo-card__video', autoplay: true, loop: true, muted: true -%}
+                {%- else -%}
+                  {%- render 'media', media: block.settings.desktop_video, mobile_media: block.settings.mobile_image, class: 'collection-promo-card__video', autoplay: true, loop: true, muted: true -%}
+                {%- endif -%}
+              {%- else -%}
+                {%- if block.settings.mobile_media_type == 'video' -%}
+                  {%- render 'media', media: block.settings.desktop_image, mobile_media: block.settings.mobile_video, class: 'collection-promo-card__img' -%}
+                {%- else -%}
+                  {%- render 'media', media: block.settings.desktop_image, mobile_media: block.settings.mobile_image, class: 'collection-promo-card__img' -%}
+                {%- endif -%}
+              {%- endif -%}
+            </div>
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+
+      <div class="product-item" data-id="{{ product.id }}" role="listitem">
+        {% render 'product-card', product: product %}
+      </div>
+    {%- endfor -%}
+  </div>
+
+  {%- comment -%} ── Load more / pagination ── {%- endcomment -%}
+  <nav class="collection-pagination" aria-label="{{ 'sections.collection.pagination_label' | t }}">
+    {%- if load_mode == 'auto_scroll' and paginate.next -%}
+      <a
+        href="{{ paginate.next.url }}"
+        class="collection-load-more collection-load-more--auto"
+        data-load-more
+        aria-hidden="true"
+        tabindex="-1"
+      >
+        <span class="collection-load-more__spinner" aria-hidden="true"></span>
+        <span class="visually-hidden">{{ 'sections.collection.loading' | t }}</span>
+      </a>
+
+    {%- elsif load_mode == 'load_more_btn' and paginate.next -%}
+      <a
+        href="{{ paginate.next.url }}"
+        class="collection-load-more collection-load-more--btn button"
+        data-load-more
+        role="button"
+      >
+        {{ 'sections.collection.load_more' | t }}
+      </a>
+      {% if paginate.pages > 1 %}
+        <div class="collection-pagination-info" aria-live="polite">
+          {{ 'sections.collection.page_of' | t: current: paginate.current_page, total: paginate.pages }}
+        </div>
+      {% endif %}
+
+    {%- elsif load_mode == 'pagination' -%}
+      {% if paginate.pages > 1 %}
+        <ol class="collection-pagination-list" role="list">
+          {%- comment -%} Previous {%- endcomment -%}
+          <li>
+            {% if paginate.previous %}
+              <a href="{{ paginate.previous.url }}" class="collection-pagination-link" aria-label="{{ 'sections.collection.previous_page' | t }}" rel="prev">&lsaquo;</a>
+            {% else %}
+              <span class="collection-pagination-link collection-pagination-link--disabled" aria-hidden="true">&lsaquo;</span>
+            {% endif %}
+          </li>
+
+          {%- comment -%} First page {%- endcomment -%}
+          {% if paginate.current_page > 3 %}
+            <li>
+              <a href="{{ collection.url }}?page=1" class="collection-pagination-link" aria-label="{{ 'sections.collection.go_to_page' | t: page: 1 }}">1</a>
+            </li>
+            {% if paginate.current_page > 4 %}
+              <li><span class="collection-pagination-ellipsis" aria-hidden="true">&hellip;</span></li>
+            {% endif %}
+          {% endif %}
+
+          {%- comment -%} Page window {%- endcomment -%}
+          {%- for part in paginate.parts -%}
+            <li>
+              {% if part.is_link %}
+                <a
+                  href="{{ part.url }}"
+                  class="collection-pagination-link"
+                  aria-label="{{ 'sections.collection.go_to_page' | t: page: part.title }}"
+                >
+                  {{ part.title }}
+                </a>
+              {% else %}
+                <span
+                  class="collection-pagination-link collection-pagination-link--current"
+                  aria-current="page"
+                  aria-label="{{ 'sections.collection.current_page' | t: page: part.title }}"
+                >
+                  {{ part.title }}
+                </span>
+              {% endif %}
+            </li>
+          {%- endfor -%}
+
+          {%- comment -%} Last page {%- endcomment -%}
+          {% assign paginate_minus_2 = paginate.pages | minus: 2 %}
+          {% if paginate.current_page < paginate_minus_2 %}
+            {% assign penultimate = paginate.pages | minus: 3 %}
+            {% if paginate.current_page < penultimate %}
+              <li><span class="collection-pagination-ellipsis" aria-hidden="true">&hellip;</span></li>
+            {% endif %}
+            <li>
+              <a href="{{ collection.url }}?page={{ paginate.pages }}" class="collection-pagination-link" aria-label="{{ 'sections.collection.go_to_page' | t: page: paginate.pages }}">{{ paginate.pages }}</a>
+            </li>
+          {% endif %}
+
+          {%- comment -%} Next {%- endcomment -%}
+          <li>
+            {% if paginate.next %}
+              <a href="{{ paginate.next.url }}" class="collection-pagination-link" aria-label="{{ 'sections.collection.next_page' | t }}" rel="next">&rsaquo;</a>
+            {% else %}
+              <span class="collection-pagination-link collection-pagination-link--disabled" aria-hidden="true">&rsaquo;</span>
+            {% endif %}
+          </li>
+        </ol>
+      {% endif %}
+    {%- endif -%}
+  </nav>
+</section>
+
+{%- endpaginate -%}
+
+<script src="{{ 'collection.js' | asset_url }}" defer></script>
+
+
+
+{% schema %}
+{
+  "name": "t:general.collection",
+  "settings": [
+    {
+      "type": "select",
+      "id": "filter_position",
+      "label": "t:sections.collection.settings.filter_position.label",
+      "options": [
+        { "value": "left", "label": "t:sections.collection.settings.filter_position.options.left" },
+        { "value": "right", "label": "t:sections.collection.settings.filter_position.options.right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "range",
+      "id": "product_limit",
+      "label": "t:sections.collection.settings.product_limit.label",
+      "min": 2,
+      "max": 50,
+      "default": 12
+    },
+    {
+      "type": "select",
+      "id": "load_more_option",
+      "label": "t:sections.collection.settings.load_more_option.label",
+      "options": [
+        { "value": "auto_scroll", "label": "t:sections.collection.settings.load_more_option.options.auto_scroll" },
+        { "value": "load_more_btn", "label": "t:sections.collection.settings.load_more_option.options.load_more_btn" },
+        { "value": "pagination", "label": "t:sections.collection.settings.load_more_option.options.pagination" }
+      ],
+      "default": "auto_scroll"
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "label": "t:sections.collection.settings.columns_desktop.label",
+      "min": 2,
+      "max": 6,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "select",
+      "id": "columns_mobile",
+      "label": "t:sections.collection.settings.columns_mobile.label",
+      "options": [
+        { "value": "1", "label": "1" },
+        { "value": "2", "label": "2" }
+      ],
+      "default": "2"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "promo-media",
+      "name": "t:sections.collection.blocks.promo-media.name",
+      "settings": [
+        {
+          "type": "header",
+          "content": "t:sections.collection.blocks.promo-media.settings.desktop_header"
+        },
+        {
+          "type": "select",
+          "id": "desktop_media_type",
+          "label": "t:sections.collection.blocks.promo-media.settings.media_type.label",
+          "options": [
+            { "value": "image", "label": "t:sections.collection.blocks.promo-media.settings.media_type.options.image" },
+            { "value": "video", "label": "t:sections.collection.blocks.promo-media.settings.media_type.options.video" }
+          ],
+          "default": "image"
+        },
+        {
+          "type": "image_picker",
+          "id": "desktop_image",
+          "label": "t:sections.collection.blocks.promo-media.settings.desktop_image.label"
+        },
+        {
+          "type": "video",
+          "id": "desktop_video",
+          "label": "t:sections.collection.blocks.promo-media.settings.desktop_video.label"
+        },
+        {
+          "type": "range",
+          "id": "desktop_row",
+          "label": "t:sections.collection.blocks.promo-media.settings.row.label",
+          "min": 1,
+          "max": 20,
+          "step": 1,
+          "default": 1
+        },
+        {
+          "type": "range",
+          "id": "desktop_column",
+          "label": "t:sections.collection.blocks.promo-media.settings.column.label",
+          "min": 1,
+          "max": 6,
+          "step": 1,
+          "default": 1
+        },
+        {
+          "type": "header",
+          "content": "t:sections.collection.blocks.promo-media.settings.mobile_header"
+        },
+        {
+          "type": "select",
+          "id": "mobile_media_type",
+          "label": "t:sections.collection.blocks.promo-media.settings.media_type.label",
+          "options": [
+            { "value": "image", "label": "t:sections.collection.blocks.promo-media.settings.media_type.options.image" },
+            { "value": "video", "label": "t:sections.collection.blocks.promo-media.settings.media_type.options.video" }
+          ],
+          "default": "image"
+        },
+        {
+          "type": "image_picker",
+          "id": "mobile_image",
+          "label": "t:sections.collection.blocks.promo-media.settings.mobile_image.label"
+        },
+        {
+          "type": "video",
+          "id": "mobile_video",
+          "label": "t:sections.collection.blocks.promo-media.settings.mobile_video.label"
+        },
+        {
+          "type": "range",
+          "id": "mobile_row",
+          "label": "t:sections.collection.blocks.promo-media.settings.row.label",
+          "min": 1,
+          "max": 40,
+          "step": 1,
+          "default": 1
+        },
+        {
+          "type": "range",
+          "id": "mobile_column",
+          "label": "t:sections.collection.blocks.promo-media.settings.column.label",
+          "min": 1,
+          "max": 3,
+          "step": 1,
+          "default": 1
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

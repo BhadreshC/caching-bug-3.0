@@ -1,0 +1,32 @@
+{%- case block.type -%}
+{%- when 'navigation' -%}
+{%- if block.settings.title != blank or block.settings.menu != blank -%}
+<div class="column-navigation {% if block.settings.hide_mobile %}hide-footer-nav{% endif %}" style="grid-column:span {{block.settings.grid}};">
+  <div class="footer-navigation">
+    {%- if block.settings.title != blank -%}
+    <h6>{{- block.settings.title -}}</h6>
+    {%- else -%}
+    <h6>{{- block.settings.menu.title -}}</h6>
+    {%- endif -%}
+    {%- if block.settings.menu != blank -%}
+    <ul role="list">
+      {%- for link in block.settings.menu.links -%}
+      <li><a href="{{link.url}}">{{- link.title -}}</a></li>
+      {%- endfor -%}
+    </ul>
+    {%- endif -%}
+  </div>
+</div>
+{%- endif -%}
+{%- when 'newsletter' -%}
+{%- if block.settings.title != blank-%}
+<div class="column-newsletter" style="grid-column:span {{block.settings.grid}};">
+    {% if block.settings.title != blank %}
+        <h4>{{ block.settings.title }}</h4>
+    {% endif %}
+  <div class="footer-newsletter">
+    {{- block.settings.html -}}
+  </div>
+</div>
+{%- endif -%}
+{%- endcase -%}

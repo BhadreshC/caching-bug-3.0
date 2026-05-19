@@ -1,0 +1,54 @@
+{{ "breadcrumb.css" | asset_url | stylesheet_tag }}
+<div class="snippet-breadcrumb">
+    <nav class="breadcrumbs" role="navigation" aria-label="breadcrumbs">
+        <ol class="breadcrumbs__list">
+
+            <li class="breadcrumbs__item">
+            <a href="{{ routes.root_url }}">Home</a>
+            </li>
+
+            {% if template.name == 'collection' and collection.handle %}
+            <li class="breadcrumbs__item">
+                <span>{{ collection.title }}</span>
+            </li>
+
+            {% elsif template.name == 'product' %}
+            {% if collection %}
+                <li class="breadcrumbs__item">
+                <a href="{{ collection.url }}">{{ collection.title }}</a>
+                </li>
+            {% endif %}
+            <li class="breadcrumbs__item">
+                <span>{{ product.title }}</span>
+            </li>
+
+            {% elsif template.name == 'blog' %}
+            <li class="breadcrumbs__item">
+                <span>{{ blog.title }}</span>
+            </li>
+
+            {% elsif template.name == 'article' %}
+            <li class="breadcrumbs__item">
+                <a href="{{ blog.url }}">{{ blog.title }}</a>
+            </li>
+            <li class="breadcrumbs__item">
+                <span>{{ article.title }}</span>
+            </li>
+
+            {% elsif template.name == 'page' %}
+            <li class="breadcrumbs__item">
+                <span>{{ page.title }}</span>
+            </li>
+
+            {% elsif template.name == 'search' %}
+            <li class="breadcrumbs__item">
+                <span>Search</span>
+            </li>
+            {% endif %}
+
+        </ol>
+    </nav>
+</div>
+<style>
+
+</style>

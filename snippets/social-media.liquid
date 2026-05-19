@@ -1,0 +1,29 @@
+<ul class="social-media">
+    {%- if settings.social_twitter_link != blank -%}
+        <li><a href="{{ settings.social_twitter_link }}" target="_blank" title="Twitter">{%- render 'social-icon' | id: 'icon-twitter' -%}</a></li>
+    {%- endif -%}
+    {%- if settings.social_pinterest_link != blank -%}
+        <li><a href="{{ settings.social_pinterest_link }}" target="_blank" title="Pinterest">{%- render 'social-icon' | id: 'icon-pinterest' -%}</a></li>
+    {%- endif -%}
+    {%- if settings.social_facebook_link != blank -%}
+        <li><a href="{{ settings.social_facebook_link }}" target="_blank" title="Facebook">{%- render 'social-icon' | id: 'icon-facebook' -%}</a></li>
+    {%- endif -%}
+    {%- if settings.social_instagram_link != blank -%}
+        <li><a href="{{ settings.social_instagram_link }}" target="_blank" title="Instagram">{%- render 'social-icon' | id: 'icon-instagram' -%}</a></li>
+    {%- endif -%}
+    {%- if settings.social_tiktok_link != blank -%}
+        <li><a href="{{ settings.social_tiktok_link }}" target="_blank" title="Tiktok">{%- render 'social-icon' | id: 'icon-tiktok' -%}</a></li>
+    {%- endif -%}
+    {%- if settings.social_tumblr_link != blank -%}
+        <li><a href="{{ settings.social_tumblr_link }}" target="_blank" title="Tumblr">{%- render 'social-icon' | id: 'icon-tumblr' -%}</a></li>
+    {%- endif -%}
+    {%- if settings.social_snapchat_link != blank -%}
+        <li><a href="{{ settings.social_snapchat_link }}" target="_blank" title="Snapchat">{%- render 'social-icon' | id: 'icon-snapchat' -%}</a></li>
+    {%- endif -%}
+    {%- if settings.social_youtube_link != blank -%}
+        <li><a href="{{ settings.social_youtube_link }}" target="_blank" title="Youtube">{%- render 'social-icon' | id: 'icon-youtube' -%}</a></li>
+    {%- endif -%}
+    {%- if settings.social_vimeo_link != blank -%}
+        <li><a href="{{ settings.social_vimeo_link }}" target="_blank" title="Vimeo">{%- render 'social-icon' | id: 'icon-vimeo' -%}</a></li>
+    {%- endif -%}
+</ul>

@@ -1,0 +1,412 @@
+{
+  "general": {
+    "404": "Not found",
+    "article": "Article",
+    "block": "Block",
+    "blog": "Blog",
+    "cart": "Cart",
+    "collection": "Collection",
+    "collections": "Collections",
+    "collection_card": "Collection card",
+    "collections_grid": "Collections grid",
+    "colors": "Colors",
+    "column": "Column",
+    "content": "Content",
+    "custom_section": "Custom section",
+    "fonts": "Fonts",
+    "footer": "Footer",
+    "gift_card": "Gift card",
+    "group": "Group",
+    "header": "Header",
+    "layout": "Layout",
+    "main": "Main",
+    "page": "Page",
+    "password": "Password",
+    "primary": "Primary",
+    "product": "Product",
+    "row": "Row",
+    "search": "Search",
+    "secondary": "Secondary",
+    "section": "Section",
+    "settings": "Settings",
+    "sidebar": "Sidebar",
+    "text": "Text",
+    "theme": "Theme",
+    "typography": "Typography"
+  },
+  "labels": {
+    "alignment": "Alignment",
+    "background": "Background",
+    "foreground": "Foreground",
+    "grid_gap": "Grid spacing",
+    "grid_item_width": "Grid item width",
+    "input_corner_radius": "Input corner radius",
+    "layout_direction": "Layout direction",
+    "menu": "Menu",
+    "padding": "Padding",
+    "page_margin": "Page margin",
+    "page_width": "Page width",
+    "show_payment_icons": "Show payment icons",
+    "text_style": "Text style",
+    "text": "Text"
+  },
+  "sections": {
+    "cart_drawer": {
+      "name": "Cart drawer",
+      "settings": {
+        "button_label": {
+          "label": "Go to cart button label"
+        },
+        "threshold": {
+          "label": "Free shipping threshold"
+        }
+      },
+      "blocks": {
+        "upsell": {
+          "name": "Upsell product",
+          "settings": {
+            "product": {
+              "label": "Product"
+            }
+          }
+        },
+        "usp": {
+          "name": "USP",
+          "settings": {
+            "icon": {
+              "label": "SVG icon",
+              "info": "Paste an inline SVG element"
+            },
+            "text": {
+              "label": "Text"
+            }
+          }
+        }
+      }
+    },
+    "announcement-bar": {
+      "name": "Announcement Bar",
+      "settings": {
+        "text": {
+          "label": "Title"
+        }
+      },
+      "presets": {
+        "name": "Announcement Bar"
+      }
+    },
+    "apps": {
+      "name": "Apps"
+    },
+    "header": {
+      "name": "Header",
+      "settings": {
+        "enable_search": {
+          "label": "Enable Search"
+        }
+      }
+    },
+    "footer": {
+      "name": "Footer",
+      "settings": {
+        "copyright": {
+          "label": "Copyright"
+        },
+        "enable_payment": {
+          "label": "Enable Payment Icons"
+        },
+        "enable_social": {
+          "label": "Enable Social Icons"
+        }
+      },
+      "blocks": {
+        "grid": "Column span",
+        "navigation": {
+          "name": "Navigation",
+          "settings": {
+            "title": {
+              "label": "Title"
+            },
+            "menu": {
+              "label": "Menu"
+            },
+            "hide_mobile": {
+              "label": "Hide in Mobile"
+            }
+          }
+        },
+        "newsletter": {
+          "name": "Newsletter",
+          "settings": {
+            "title": {
+              "label": "HTML"
+            }
+          }
+        }
+      }
+    },
+    "gift_card": {
+      "name": "Gift card",
+      "settings": {
+        "header_branding": "Branding",
+        "show_logo": {
+          "label": "Show logo"
+        },
+        "custom_logo": {
+          "label": "Custom logo"
+        },
+        "custom_image": {
+          "label": "Gift card image",
+          "info": "Replaces the default gift card image"
+        },
+        "header_options": "Options",
+        "show_qr_code": {
+          "label": "Show QR code"
+        },
+        "header_layout": "Layout",
+        "show_header": {
+          "label": "Show header"
+        },
+        "show_footer": {
+          "label": "Show footer"
+        },
+        "header_style": "Style",
+        "background_color": {
+          "label": "Background color"
+        }
+      }
+    },
+    "collection": {
+      "name": "Collection",
+      "settings": {
+        "filter_position": {
+          "label": "Filter drawer position",
+          "options": {
+            "left": "Left",
+            "right": "Right"
+          }
+        },
+        "product_limit": {
+          "label": "Products per page"
+        },
+        "load_more_option": {
+          "label": "Load more style",
+          "options": {
+            "auto_scroll": "Infinite scroll",
+            "load_more_btn": "Load more button",
+            "pagination": "Pagination"
+          }
+        },
+        "columns_desktop": {
+          "label": "Columns on desktop"
+        },
+        "columns_mobile": {
+          "label": "Columns on mobile"
+        }
+      },
+      "blocks": {
+        "promo-media": {
+          "name": "Promo media",
+          "settings": {
+            "desktop_header": "Desktop",
+            "mobile_header": "Mobile",
+            "media_type": {
+              "label": "Media type",
+              "options": {
+                "image": "Image",
+                "video": "Video"
+              }
+            },
+            "desktop_image": {
+              "label": "Desktop image"
+            },
+            "desktop_video": {
+              "label": "Desktop video"
+            },
+            "mobile_image": {
+              "label": "Mobile image"
+            },
+            "mobile_video": {
+              "label": "Mobile video"
+            },
+            "row": {
+              "label": "Row"
+            },
+            "column": {
+              "label": "Column"
+            }
+          }
+        }
+      }
+    }
+  },
+  "options": {
+    "alignment": {
+      "left": "Left",
+      "center": "Center",
+      "right": "Right"
+    },
+    "direction": {
+      "horizontal": "Horizontal",
+      "vertical": "Vertical"
+    },
+    "page_width": {
+      "narrow": "Narrow",
+      "wide": "Wide"
+    },
+    "size": {
+      "large": "Large",
+      "small": "Small"
+    },
+    "text_style": {
+      "title": "Title",
+      "subtitle": "Subtitle",
+      "normal": "Normal text"
+    },
+  },
+  "settings_schema": {
+    "product-grid": {
+      "name": "Product Card",
+      "settings": {
+        "enable_image_hover": {
+          "label": "Enable Second Image on Hover"
+        },
+        "grid_ratio": {
+          "label": "Grid Image Height",
+          "option__1": {
+            "label": "Square"
+          },
+          "option__2": {
+            "label": "Portrait"
+          }
+        },
+        "show_size_selector": {
+          "label": "Show Size Selector"
+        },
+        "size_selector": {
+          "label": "Size Selector",
+          "option__1": {
+            "label": "Go to PDP with selected size"
+          },
+          "option__2": {
+            "label": "Directly add to cart"
+          }
+        },
+        "show_quidckbuy": {
+          "label": "Show Quickbuy Button in Mobile"
+        }
+      }
+    },
+    "products-badge": {
+      "name": "Product Badge",
+      "settings": {
+        "header_1": {
+          "content": "Badge 1"
+        },
+        "header_2": {
+          "content": "Badge 2"
+        },
+        "header_3": {
+          "content": "Badge 3"
+        },
+        "header_4": {
+          "content": "Badge 4"
+        },
+        "header_5": {
+          "content": "Badge 5"
+        },
+        "paragraph": {
+          "label": "Badge title and Product Tag name both should be same."
+        },
+        "badge_title": {
+          "label": "Badge Title"
+        },
+        "badge_color": {
+          "label": "Badge Text"
+        },
+        "badge_background": {
+          "label": "Badge Background"
+        }
+      }
+    },
+    "serach": {
+      "name": "Search Suggestion",
+    },
+    "social-media": {
+      "name": "Social media",
+      "settings": {
+        "header": {
+          "content": "Social accounts"
+        },
+        "social_twitter_link": {
+          "label": "Twitter",
+          "info": "https:\/\/twitter.com\/shopify"
+        },
+        "social_facebook_link": {
+          "label": "Facebook",
+          "info": "https:\/\/facebook.com\/shopify"
+        },
+        "social_pinterest_link": {
+          "label": "Pinterest",
+          "info": "https:\/\/pinterest.com\/shopify"
+        },
+        "social_instagram_link": {
+          "label": "Instagram",
+          "info": "http:\/\/instagram.com\/shopify"
+        },
+        "social_tiktok_link": {
+          "label": "TikTok",
+          "info": "https:\/\/tiktok.com\/@shopify"
+        },
+        "social_tumblr_link": {
+          "label": "Tumblr",
+          "info": "https:\/\/shopify.tumblr.com"
+        },
+        "social_snapchat_link": {
+          "label": "Snapchat",
+          "info": "https:\/\/www.snapchat.com\/add\/shopify"
+        },
+        "social_youtube_link": {
+          "label": "YouTube",
+          "info": "https:\/\/www.youtube.com\/shopify"
+        },
+        "social_vimeo_link": {
+          "label": "Vimeo",
+          "info": "https:\/\/vimeo.com\/shopify"
+        }
+      }
+    },
+    "payment": {
+      "name": "Payment Icons",
+      "settings": {
+        "klarna": {
+          "label": "Klarna"
+        },
+        "ideal": {
+          "label": "iDeal"
+        },
+        "bancontact": {
+          "label": "Bancontact"
+        },
+        "visa": {
+          "label": "Visa"
+        },
+        "mastercard": {
+          "label": "Mastercard"
+        },
+        "american_express": {
+          "label": "American Express"
+        },
+        "afterpay": {
+          "label": "Aafterpay"
+        },
+        "discover": {
+          "label": "Discover"
+        },
+        "maestro": {
+          "label": "Maestro"
+        }
+      }
+    },
+  }
+}

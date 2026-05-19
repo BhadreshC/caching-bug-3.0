@@ -1,0 +1,100 @@
+{% comment %}
+  This section is used in the product template to render product page with
+  media, content, and add-to-cart form.
+
+  https://shopify.dev/docs/storefronts/themes/architecture/templates/product
+{% endcomment %}
+
+<div class="product">
+  <div class="product-images">
+    {% for image in product.images %}
+      {% render 'image', class: 'product-image', image: image %}
+    {% endfor %}
+  </div>
+
+  <div class="product-info">
+    <h1>{{ product.title }}</h1>
+    <div class="product-price">{{ product.price | money }}</div>
+    <div class="product-description">{{ product.description }}</div>
+    {% render "product-form" , product:product %}
+  </div>
+
+</div>
+
+{% stylesheet %}
+  .product {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-xl);
+  }
+
+  .product-images {
+    display: grid;
+    gap: var(--spacing-sm);
+  }
+
+  .product-image img {
+    border-radius: var(--style-border-radius-sm);
+  }
+
+  .product-info {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+  }
+
+  .product-price {
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+
+  .product-form {
+    grid-column: 1 / -1;
+    max-width: 600px;
+  }
+
+  .product-form__group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+    margin-bottom: var(--spacing-md);
+  }
+
+  .product-form__group label {
+    font-weight: 500;
+  }
+
+  .product-form__actions {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+  }
+
+  @media (max-width: 768px) {
+    .product {
+      grid-template-columns: 1fr;
+      gap: var(--spacing-lg);
+    }
+
+    .product-form {
+      grid-column: auto;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:general.product",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enable_breadcrumb",
+      "label": "Enable Breadcrumb",
+      "default": true
+    }
+  ],
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  }
+}
+{% endschema %}

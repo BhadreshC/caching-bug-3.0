@@ -1,0 +1,93 @@
+{% doc %}
+  Renders a single media (image, video, or external video).
+  Can be used for product media or media from metafields.
+
+  @param {object} media - The media object to render (required). Expects a Shopify media object (image_picker, video, etc.)
+  @param {object} [mobile_media] - An optional media object to render on mobile
+  @param {boolean} [preload] - If true, the image is preloaded with higher fetch priority (ignored after the third section)
+  @param {string} [class] - Optional CSS class applied to the element
+  @param {string} [style] - Optional inline styles applied to the element
+  @param {boolean} [autoplay] - Whether video media should autoplay
+  @param {boolean} [loop] - Whether video media should loop
+  @param {boolean} [muted] - Whether the video is muted (forced true if autoplay is true)
+  @param {boolean} [playsinline] - Whether video plays inline (defaults to autoplay value)
+  @param {boolean} [controls] - Whether video controls are displayed
+
+  @example
+  {% render 'media', media: product.featured_image %}
+  {% render 'media', media: section.settings.image, mobile_media: section.settings.mb_image %}
+  {% render 'media', media: section.settings.video, autoplay: true, loop: true, muted: true %}
+{% enddoc %}
+
+{%- liquid
+  assign fetchpriority = nil
+
+  if preload and section.index <= 2
+    assign loading = 'eager'
+    if section.index == 1
+      assign fetchpriority = 'high'
+    endif
+  elsif preload == false
+    assign loading = 'lazy'
+  endif
+-%}
+
+{%- case media.media_type -%}
+  {%- when 'image' -%}
+    {% assign image_class = class | append: ' media-img' %}
+
+    {%- if mobile_media != blank -%}
+      <picture>
+        {%- if mobile_media != blank -%}
+          <source
+            media="(max-width: 999px)"
+            srcset="{{ mobile_media | image_url: width: 400 }} 400w, {{ mobile_media | image_url: width: 600 }} 600w, {{ mobile_media | image_url: width: 800 }} 800w, {{ mobile_media | image_url: width: 1000 }} 1000w"
+            width="{{ mobile_media.width }}"
+            height="{{ mobile_media.height }}"
+          >
+        {%- endif -%}
+        {{ media | image_url: width: media.preview_image.width | image_tag: loading: loading, fetchpriority: fetchpriority, sizes: '(min-width: 992px) 200vw, 100vw', widths: '200,300,400,500,600,700,800,1000,1200,1400,1600,1800,2000,2200,2400,2600,2800,3000,3200', class: image_class }}
+      </picture>
+    {%- else -%}
+      {{ media | image_url: width: media.preview_image.width | image_tag: loading: loading, fetchpriority: fetchpriority, sizes: '(min-width: 992px) 200vw, 100vw', widths: '200,300,400,500,600,700,800,1000,1200,1400,1600,1800,2000,2200,2400,2600,2800,3000,3200', class: image_class }}
+    {%- endif -%}
+
+  {%- when 'video', 'external_video' -%}
+    <video-media {% if class %}class="{{ class }}"{% endif %} {% if style %}style="{{ style }}"{% endif %} type="{{ media.media_type }}" {% if media.host %}host="{{ media.host }}"{% endif %} style="--aspect-ratio: {{ media.aspect_ratio }}; {% if mobile_media != blank %}--mobile-aspect-ratio: {{ mobile_media.aspect_ratio }}{% endif %}">
+
+      {%- if media.media_type == 'video' -%}
+        {%- liquid
+          if preload
+            assign preload_attribute = 'auto'
+          else
+            assign preload_attribute = 'metadata'
+          endif
+
+          assign playsinline = playsinline | default: autoplay
+          assign muted = muted | default: autoplay
+        -%}
+
+        <video width="{{ media.sources.first.width }}" height="{{ media.sources.first.height }}"{% if playsinline %} playsinline{% endif %}{% if autoplay %} autoplay{% endif %}{% if muted %} muted{% endif %}{% if loop %} loop{% endif %}{% if controls %} controls{% endif %} preload="{{ preload_attribute }}">
+          {%- if mobile_media != blank -%}
+            {%- for source in mobile_media.sources -%}
+              <source media="(max-width: 999px)" src="{{ source.url }}" width="{{ source.width }}" height="{{ source.height }}" type="{{ source.mime_type }}">
+            {%- endfor -%}
+          {%- endif -%}
+
+          {%- for source in media.sources -%}
+            <source src="{{ source.url }}" width="{{ source.width }}" height="{{ source.height }}" type="{{ source.mime_type }}">
+          {%- endfor -%}
+        </video>
+      {%- else -%}
+          {%- liquid
+            if media.host == 'youtube'
+              echo media | external_video_url: loop: loop, mute: autoplay, autoplay: true | external_video_tag
+            elsif media.host == 'vimeo'
+              echo media | external_video_url: autopause: true, loop: loop, background: autoplay, muted: autoplay, autoplay: true | external_video_tag
+            else
+              echo media | external_video_tag: image_size: '2048x'
+            endif
+          -%}
+      {%- endif -%}
+    </video-media>
+{%- endcase -%}
