@@ -10,6 +10,8 @@ body {
   display: flex;
   flex-direction: column;
   margin: 0;
+  background-color: #fff;
+  color: #000;
   min-height: 100svh;
 }
 
