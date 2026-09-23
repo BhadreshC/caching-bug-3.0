@@ -20,6 +20,8 @@
     "header": "Header",
     "layout": "Layout",
     "main": "Main",
+    "media_grid": "Media grid",
+    "media_grid_item": "Media item",
     "page": "Page",
     "password": "Password",
     "primary": "Primary",
@@ -37,18 +39,26 @@
   "labels": {
     "alignment": "Alignment",
     "background": "Background",
+    "columns": "Columns",
     "foreground": "Foreground",
     "grid_gap": "Grid spacing",
     "grid_item_width": "Grid item width",
+    "heading": "Heading",
+    "image": "Image",
     "input_corner_radius": "Input corner radius",
     "layout_direction": "Layout direction",
+    "link": "Link",
+    "media_type": "Media type",
     "menu": "Menu",
     "padding": "Padding",
+    "padding_bottom": "Bottom padding",
+    "padding_top": "Top padding",
     "page_margin": "Page margin",
     "page_width": "Page width",
     "show_payment_icons": "Show payment icons",
     "text_style": "Text style",
-    "text": "Text"
+    "text": "Text",
+    "video": "Video"
   },
   "sections": {
     "cart_drawer": {
@@ -246,9 +256,17 @@
       "center": "Center",
       "right": "Right"
     },
+    "columns": {
+      "three": "3 columns",
+      "four": "4 columns"
+    },
     "direction": {
       "horizontal": "Horizontal",
       "vertical": "Vertical"
+    },
+    "media_type": {
+      "image": "Image",
+      "video": "Video"
     },
     "page_width": {
       "narrow": "Narrow",
@@ -262,7 +280,7 @@
       "title": "Title",
       "subtitle": "Subtitle",
       "normal": "Normal text"
-    },
+    }
   },
   "settings_schema": {
     "product-grid": {
@@ -330,7 +348,7 @@
       }
     },
     "serach": {
-      "name": "Search Suggestion",
+      "name": "Search Suggestion"
     },
     "social-media": {
       "name": "Social media",
@@ -407,6 +425,6 @@
           "label": "Maestro"
         }
       }
-    },
+    }
   }
 }

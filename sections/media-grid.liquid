@@ -1,0 +1,108 @@
+<div
+  class="section-media-grid"
+  id="section-{{ section.id }}"
+  style="
+    --media-grid-columns: {{ section.settings.columns }};
+    --media-grid-gap: {{ section.settings.grid_gap }}px;
+    --media-grid-padding-top: {{ section.settings.padding_top }}px;
+    --media-grid-padding-bottom: {{ section.settings.padding_bottom }}px;
+  "
+  {{ section.shopify_attributes }}
+>
+  {%- if section.blocks.size > 0 -%}
+    {% content_for 'blocks' %}
+  {%- elsif request.design_mode -%}
+    <p class="section-media-grid__placeholder">{{ 'general.media_grid_item' | t }}</p>
+  {%- endif -%}
+</div>
+
+{% stylesheet %}
+  .section-media-grid {
+    display: grid;
+    grid-template-columns: repeat(var(--media-grid-columns), 1fr);
+    gap: var(--media-grid-gap);
+    padding-top: var(--media-grid-padding-top);
+    padding-bottom: var(--media-grid-padding-bottom);
+  }
+
+  @media (max-width: 999px) {
+    .section-media-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 599px) {
+    .section-media-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .section-media-grid__placeholder {
+    grid-column: 1 / -1;
+    text-align: center;
+    color: var(--color-foreground);
+    opacity: 0.6;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:general.media_grid",
+  "disabled_on": {
+    "groups": ["header", "custom.overlay"]
+  },
+  "blocks": [{ "type": "media-grid-item" }],
+  "settings": [
+    {
+      "type": "select",
+      "id": "columns",
+      "label": "t:labels.columns",
+      "default": "3",
+      "options": [
+        { "value": "3", "label": "t:options.columns.three" },
+        { "value": "4", "label": "t:options.columns.four" }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "grid_gap",
+      "label": "t:labels.grid_gap",
+      "default": 16,
+      "min": 0,
+      "max": 80,
+      "step": 2,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "t:labels.padding_top",
+      "default": 40,
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "t:labels.padding_bottom",
+      "default": 40,
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:general.media_grid",
+      "blocks": [
+        { "type": "media-grid-item" },
+        { "type": "media-grid-item" },
+        { "type": "media-grid-item" }
+      ]
+    }
+  ]
+}
+{% endschema %}
