@@ -13,6 +13,11 @@
             padding-bottom:{{ section.settings.padding_bottom_mob }}px;
         }
     }
+
+
+    {% if section.settings.background != 'rgba(0,0,0,0)' %}
+    #shopify-section-{{ section.id }} .section-multicolumn { background-color: {{ section.settings.background }};  }
+    {% endif %}
 {% endstyle %}
 
 <div class="section-multicolumn section-id-{{ section.id }}">
@@ -87,6 +92,15 @@
         }
       ],
       "default": "1"
+    },
+    {
+        "type": "header",
+        "content": "Color"
+    },
+    {
+      "type": "color",
+      "id": "background",
+      "label": "Background"
     },
     {
         "type": "header",
