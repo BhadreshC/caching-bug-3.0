@@ -34,7 +34,8 @@
           "type": "media-grid-item",
           "settings": {
             "media_type": "image",
-            "heading": "Media item",
+            "image": "shopify://shop_images/fablou_carrie_blush03_1512x_1177b019-f332-4a6a-ab01-2b3cc61fd1ac.jpg",
+            "heading": "",
             "link": ""
           },
           "blocks": {}
@@ -43,7 +44,19 @@
           "type": "media-grid-item",
           "settings": {
             "media_type": "image",
-            "heading": "Media item",
+            "image": "shopify://shop_images/fablou_carrie_frapp_2048x_2461138e-c1fa-43b6-a0db-47299e35e96b.jpg",
+            "heading": "",
+            "link": ""
+          },
+          "blocks": {}
+        },
+        "media_grid_item_QpV8g7": {
+          "type": "media-grid-item",
+          "name": "t:general.media_grid_item",
+          "settings": {
+            "media_type": "video",
+            "video": "shopify://files/videos/19681766-hd_1920_1080_50fps.mp4",
+            "heading": "",
             "link": ""
           },
           "blocks": {}
@@ -52,11 +65,12 @@
       "block_order": [
         "media_grid_item_z9izqn",
         "media_grid_item_6E6LxJ",
-        "media_grid_item_q848EL"
+        "media_grid_item_q848EL",
+        "media_grid_item_QpV8g7"
       ],
       "name": "t:general.media_grid",
       "settings": {
-        "columns": "3",
+        "columns": "4",
         "grid_gap": 16,
         "padding_top": 40,
         "padding_bottom": 40
