@@ -14,7 +14,7 @@
       "name": "t:general.collections_grid",
       "settings": {
         "grid_item_width": "collections--full",
-        "grid_gap": 10
+        "grid_gap": 15
       }
     }
   },
