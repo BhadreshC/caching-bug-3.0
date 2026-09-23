@@ -9,14 +9,6 @@
  */
 {
   "sections": {
-    "collections_McT3bc": {
-      "type": "collections",
-      "name": "t:general.collections_grid",
-      "settings": {
-        "grid_item_width": "collections--full",
-        "grid_gap": 15
-      }
-    },
     "media_grid_A3YAT8": {
       "type": "media-grid",
       "blocks": {
@@ -54,7 +46,8 @@
           "type": "media-grid-item",
           "name": "t:general.media_grid_item",
           "settings": {
-            "media_type": "video",
+            "media_type": "image",
+            "image": "shopify://shop_images/fablou_carrie_frapp02_1512x_8bb251ad-172d-4e3e-a174-cd7b30a26014.jpg",
             "video": "shopify://files/videos/19681766-hd_1920_1080_50fps.mp4",
             "heading": "",
             "link": ""
@@ -74,6 +67,14 @@
         "grid_gap": 16,
         "padding_top": 40,
         "padding_bottom": 40
+      }
+    },
+    "collections_McT3bc": {
+      "type": "collections",
+      "name": "t:general.collections_grid",
+      "settings": {
+        "grid_item_width": "collections--full",
+        "grid_gap": 15
       }
     },
     "multicolumn_ApMRQf": {
@@ -123,8 +124,8 @@
     }
   },
   "order": [
-    "collections_McT3bc",
     "media_grid_A3YAT8",
+    "collections_McT3bc",
     "multicolumn_ApMRQf"
   ]
 }
