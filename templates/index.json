@@ -17,6 +17,51 @@
         "grid_gap": 15
       }
     },
+    "media_grid_A3YAT8": {
+      "type": "media-grid",
+      "blocks": {
+        "media_grid_item_z9izqn": {
+          "type": "media-grid-item",
+          "settings": {
+            "media_type": "image",
+            "image": "shopify://shop_images/fablou_carrie_blush01_1512x_455dbb9a-8183-410b-91c2-e820fe090da7.jpg",
+            "heading": "",
+            "link": ""
+          },
+          "blocks": {}
+        },
+        "media_grid_item_6E6LxJ": {
+          "type": "media-grid-item",
+          "settings": {
+            "media_type": "image",
+            "heading": "Media item",
+            "link": ""
+          },
+          "blocks": {}
+        },
+        "media_grid_item_q848EL": {
+          "type": "media-grid-item",
+          "settings": {
+            "media_type": "image",
+            "heading": "Media item",
+            "link": ""
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "media_grid_item_z9izqn",
+        "media_grid_item_6E6LxJ",
+        "media_grid_item_q848EL"
+      ],
+      "name": "t:general.media_grid",
+      "settings": {
+        "columns": "3",
+        "grid_gap": 16,
+        "padding_top": 40,
+        "padding_bottom": 40
+      }
+    },
     "multicolumn_ApMRQf": {
       "type": "multicolumn",
       "blocks": {
@@ -55,7 +100,7 @@
         "title": "Multicolumn",
         "columns_desktop": 3,
         "columns_mobile": "1",
-        "background": "#F6E2E2",
+        "background": "#f6e2e2",
         "padding_top": 40,
         "padding_bottom": 40,
         "padding_top_mob": 20,
@@ -65,6 +110,7 @@
   },
   "order": [
     "collections_McT3bc",
+    "media_grid_A3YAT8",
     "multicolumn_ApMRQf"
   ]
 }
