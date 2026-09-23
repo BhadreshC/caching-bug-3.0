@@ -9,146 +9,234 @@
     {%- assign transparent = true -%}
   {%- endif -%}
 {%- endfor -%}
-<header class="{% if section.settings.enable_sticky %}header-sticky{% endif %}{% if transparent %} header-transparent{% endif %}">
+
+<header
+  id="site-header"
+  class="{% if section.settings.enable_sticky %}header-sticky{% endif %}{% if transparent %} header-transparent{% endif %}"
+  role="banner"
+>
+  {%- comment -%} ── Logo + Burger ── {%- endcomment -%}
   <div class="header-title">
     <div class="d-lg-none">
-      <a href="#" class="menu-burdger">
+      <button class="menu-burdger" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu-drawer">
         <span></span><span></span><span></span>
-      </a>	
+      </button>
     </div>
     <div class="header-logo">
       {%- render 'logo', section: section -%}
     </div>
   </div>
-  <div class="header__menu d-none d-lg-block">
-    {% for link in section.settings.menu.links %}
-      {{ link.title | link_to: link.url }}
-    {% endfor %}
-  </div>
 
+  {%- comment -%} ── Desktop Navigation ── {%- endcomment -%}
+  <nav class="header__menu d-none d-lg-block" aria-label="Main navigation">
+    {%- for link in section.settings.menu.links -%}
+      {%- if link.links != blank -%}
+        <div class="header__menu-item header__menu-item--has-dropdown">
+          <a href="{{ link.url }}" class="header__menu-link">
+            {{ link.title }}
+            <svg aria-hidden="true" width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+          <div class="header__dropdown">
+            {%- for child_link in link.links -%}
+              <a href="{{ child_link.url }}" class="header__dropdown-link">{{ child_link.title }}</a>
+            {%- endfor -%}
+          </div>
+        </div>
+      {%- else -%}
+        <a href="{{ link.url }}" class="header__menu-link"{% if link.active %} aria-current="page"{% endif %}>
+          {{ link.title }}
+        </a>
+      {%- endif -%}
+    {%- endfor -%}
+  </nav>
+
+  {%- comment -%} ── Icons Area ── {%- endcomment -%}
   <div class="header__icons">
     {%- if section.settings.enable_search -%}
-      <li class="searchlist">
-        <div class="d-none d-lg-block">
-          {%- render 'search-bar', section:section -%}
-        </div>
-        <div class="d-block d-lg-none">
-          <button class="mobile-search">{{ 'search.svg' | inline_asset_content }}</button>
-        </div>
-      </li>
+      <button
+        class="header__icon-btn header__search-trigger"
+        aria-label="Open search"
+        aria-expanded="false"
+        aria-controls="header-search-overlay"
+      >
+        {{ 'search.svg' | inline_asset_content }}
+      </button>
     {%- endif -%}
-    {% if shop.customer_accounts_enabled %}
-        <shopify-account menu="{{ section.settings.menu }}">
-        {% if customer %}
-          <div class="account-button__fallback"></div>
-        {% else %}
-          <span
-            slot="signed-out-avatar"
-          >
-            account
-          </span>
 
-          <span
-            slot="signed-out-avatar"
-            aria-hidden="true"
-          >
+    {%- if shop.customer_accounts_enabled -%}
+      <shopify-account menu="{{ section.settings.menu }}">
+        {%- if customer -%}
+          <div class="account-button__fallback"></div>
+        {%- else -%}
+          <span slot="signed-out-avatar" aria-hidden="true">
             {{ 'icon-account.svg' | inline_asset_content }}
           </span>
-        {% endif %}
+        {%- endif -%}
       </shopify-account>
-      {% comment %} {{ 'icon-account.svg' | inline_asset_content | link_to: routes.account_url }} {% endcomment %}
-    {% endif %}
+    {%- endif -%}
 
     {%- if template contains 'cart' -%}
-      <a href="{{ routes.cart_url }}">
+      <a href="{{ routes.cart_url }}" class="header__icon-btn" aria-label="Cart">
         {{ 'icon-cart.svg' | inline_asset_content }}
-          {% if cart.item_count > 0 %}
-            <sup>{{ cart.item_count }}</sup>
-          {% endif %}
-        </a>
-      {%- else -%}
-      <button class="header-cart">
+        {%- if cart.item_count > 0 -%}
+          <sup>{{ cart.item_count }}</sup>
+        {%- endif -%}
+      </a>
+    {%- else -%}
+      <button class="header__icon-btn header-cart" aria-label="Open cart">
         {{ 'icon-cart.svg' | inline_asset_content }}
-          {% if cart.item_count > 0 %}
-            <sup class="cart-count">{{ cart.item_count }}</sup>
-          {% endif %}
-        </button>
+        {%- if cart.item_count > 0 -%}
+          <sup class="cart-count">{{ cart.item_count }}</sup>
+        {%- endif -%}
+      </button>
     {%- endif -%}
-    {% comment %} <a href="{{ routes.cart_url }}">
-      {% if cart.item_count > 0 %}
-        <sup>{{ cart.item_count }}</sup>
-      {% endif %}
-
-      {{ 'icon-cart.svg' | inline_asset_content }}
-    </a> {% endcomment %}
   </div>
+</header>
 
-  <div class="mobile-serachbox">
-    {%- render 'search-bar', section:section -%}
-  </div>
-  {%- if section.settings.enable_search -%}
-  <div id="predictive-search" tabindex="-1"></div>
-  <div class="search-suggetion">
-    {% if settings.search_recommended_title != blank %}
-    <h3>{{ settings.search_recommended_title }}</h3>
-    {% endif %}
-    <div class="search-row">
-      {%- for product in settings.s_pdt_list -%}
-        <div class="search-column">
-          <div class="collection-product">
-            {% if product.featured_image %}
-              {% render 'image',
-                class: 'collection-product__image',
-                image: product.featured_image,
-                url: product.url,
-                width: 400,
-                height: 400,
-                crop: 'center'
-              %}
-            {% endif %}
-            <div class="collection-product__content">
-              <h3 class="collection-product__title">
-                {{ product.title | escape | link_to: product.url }}
-              </h3>
-              <div class="collection-product__price">{{ product.price | money }}</div>
+{%- comment -%} ── Search Overlay ── {%- endcomment -%}
+{%- if section.settings.enable_search -%}
+<div
+  id="header-search-overlay"
+  class="header-search-overlay"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Search"
+  tabindex="-1"
+>
+  <div class="header-search-overlay__inner">
+    <div class="snippet-search-bar" style="display:none;">
+      {%- render 'search-bar', section: section -%}
+    </div>
+    <form
+      class="header-search-overlay__form"
+      action="{{ routes.search_url }}"
+      method="get"
+      role="search"
+    >
+      {{ 'search.svg' | inline_asset_content }}
+      <input
+        id="HeaderSearchInput"
+        class="header-search-overlay__input"
+        type="text"
+        name="q"
+        value="{{ search.terms | escape }}"
+        placeholder="Search products, collections…"
+        autocomplete="off"
+        autocorrect="off"
+        spellcheck="false"
+        aria-label="Search"
+      >
+      <input name="options[prefix]" type="hidden" value="last">
+      <input type="hidden" name="type" value="product">
+      <button
+        class="header-search-overlay__close"
+        type="button"
+        aria-label="Close search"
+      >
+        {{ 'icon-close.svg' | inline_asset_content }}
+      </button>
+    </form>
+
+    {%- if settings.search_recommended_title != blank or settings.s_pdt_list != blank -%}
+      <div class="search-suggetion">
+        {%- if settings.search_recommended_title != blank -%}
+          <h3>{{ settings.search_recommended_title }}</h3>
+        {%- endif -%}
+        <div class="search-row">
+          {%- for product in settings.s_pdt_list -%}
+            <div class="search-column">
+              <div class="collection-product">
+                {%- if product.featured_image -%}
+                  {%- render 'image',
+                    class: 'collection-product__image',
+                    image: product.featured_image,
+                    url: product.url,
+                    width: 400,
+                    height: 400,
+                    crop: 'center'
+                  -%}
+                {%- endif -%}
+                <div class="collection-product__content">
+                  <h3 class="collection-product__title">
+                    {{ product.title | escape | link_to: product.url }}
+                  </h3>
+                  <div class="collection-product__price">{{ product.price | money }}</div>
+                </div>
+              </div>
             </div>
-          </div>      
+          {%- endfor -%}
         </div>
-      {%- endfor -%}    
+      </div>
+    {%- endif -%}
+    <div id="predictive-search" tabindex="-1"></div>
+  </div>
+</div>
+{%- endif -%}
+
+{%- comment -%} ── Mobile Drawer ── {%- endcomment -%}
+<div
+  id="mobile-menu-drawer"
+  class="snippet-menu-drawer"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Navigation menu"
+  tabindex="-1"
+>
+  <div class="menu-drawer-inner">
+    <div class="menu-drawer-header">
+      <span class="menu-drawer-brand">{{ shop.name }}</span>
+      <a href="#" class="close-menu" aria-label="Close menu">
+        {{ 'icon-close.svg' | inline_asset_content }}
+      </a>
+    </div>
+
+    <ul class="mobile-nav" role="list">
+      {%- for link in section.settings.menu.links -%}
+        <li>
+          <a href="{{ link.url }}">{{ link.title }}</a>
+        </li>
+      {%- endfor -%}
+    </ul>
+
+    <div class="menu-drawer-footer">
+      {%- if shop.customer_accounts_enabled -%}
+        <a href="{{ routes.account_url }}" aria-label="Account">
+          {{ 'icon-account.svg' | inline_asset_content }}
+        </a>
+      {%- endif -%}
+      <a href="{{ routes.cart_url }}" aria-label="Cart">
+        {{ 'icon-cart.svg' | inline_asset_content }}
+      </a>
     </div>
   </div>
-  {%- endif -%}
-</header>
-{%- render 'menu-drawer' -%}
+</div>
+
 <script src="{{ 'header.js' | asset_url }}" defer="defer"></script>
+
 {% schema %}
 {
   "name": "t:general.header",
-  "class": "main-header",
+  "class": "main-header section-header",
   "settings": [
     {
-      "type":"select",
-      "id":"logo_type",
-      "label":"Logo Type",
-      "options":[
-        {
-          "label":"Image",
-          "value":"image"
-        },
-        {
-          "label":"SVG",
-          "value":"svg"
-        }
+      "type": "select",
+      "id": "logo_type",
+      "label": "Logo Type",
+      "options": [
+        { "label": "Image", "value": "image" },
+        { "label": "SVG",   "value": "svg"   }
       ]
     },
     {
-      "type":"image_picker",
-      "id":"logo",
+      "type": "image_picker",
+      "id": "logo",
       "label": "Logo"
     },
     {
-      "type":"html",
-      "id":"svg_logo",
+      "type": "html",
+      "id": "svg_logo",
       "label": "SVG Logo"
     },
     {
@@ -157,26 +245,27 @@
       "label": "t:labels.menu"
     },
     {
-      "type":"checkbox",
-      "id":"enable_search",
-      "label":"t:sections.header.settings.enable_search.label",
-      "default":true
-	  },
+      "type": "checkbox",
+      "id": "enable_search",
+      "label": "t:sections.header.settings.enable_search.label",
+      "default": true
+    },
     {
       "type": "checkbox",
       "id": "enable_sticky",
-      "label": "Enable Sticky"
+      "label": "Enable Sticky Header",
+      "default": true
     },
     {
-      "type":"html",
-      "id":"cart_icon",
-      "label":"Cart Icon"
+      "type": "html",
+      "id": "cart_icon",
+      "label": "Cart Icon"
     },
     {
-      "type":"textarea",
-      "id":"page_handle",
-      "label":"List",
-      "info":"Add page-handle or page handle which have transparent header"
+      "type": "textarea",
+      "id": "page_handle",
+      "label": "Transparent Header Pages",
+      "info": "Add page handle or template name (one per line) to enable transparent header"
     }
   ]
 }
